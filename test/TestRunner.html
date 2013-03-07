@@ -1,0 +1,26 @@
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Mocha Tests</title>
+	<link rel="stylesheet" href="lib/mocha-1.8.1/mocha.css" />
+</head>
+<body>
+	<div id="mocha"></div>
+	<script src="http://cdn.sencha.io/ext-4.2.0-beta/ext-all.js"></script>
+	<script src="../build/deft-debug.js"></script>
+
+	<script src="lib/assert/assert.js"></script>
+	<script src="lib/mocha-1.8.1/mocha.js"></script>
+	<script src="lib/sinon-1.6.0/sinon.js"></script>
+	<script>mocha.setup('bdd')</script>
+
+	<!-- <script src="lib/setImmediate-1.0.1.js"></script> -->
+
+	<script src="DeftJS-Promise-adapter.js"></script>
+	<script src="lib/promises-aplus-tests-1.2.1/promises-aplus-tests.js"></script>
+	
+	<script>
+		mocha.run();
+	</script>
+</body>
+</html>
