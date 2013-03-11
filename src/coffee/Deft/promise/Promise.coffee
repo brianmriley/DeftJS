@@ -26,7 +26,7 @@ Ext.define( 'Deft.promise.Promise',
 		###
 		when: ( promiseOrValue ) ->
 			deferred = Ext.create( 'Deft.promise.Deferred' )
-			deferred.resolve( value )
+			deferred.resolve( promiseOrValue )
 			return deferred.promise
 		
 		###*
@@ -37,7 +37,7 @@ Ext.define( 'Deft.promise.Promise',
 		* value of each of the `promisesOrValues`.
 		###
 		all: ( promisesOrValues ) ->
-			return Deft.Promise.map( promisesOrValues, x -> x )
+			return Deft.Promise.map( promisesOrValues, ( x ) -> x )
 		
 		###*
 		* Initiates a competitive race, returning a new {@link Deft.promise.Promise}
@@ -106,7 +106,7 @@ Ext.define( 'Deft.promise.Promise',
 		* delay (in milliseconds).
 		###
 		delay: ( promiseOrValue, milliseconds ) ->
-			deferred = new Deferred()
+			deferred = Ext.create( 'Deft.promise.Deferred' )
 			setTimeout( 
 				->
 					deferred.resolve( promise )
@@ -121,7 +121,7 @@ Ext.define( 'Deft.promise.Promise',
 		* promise has not resolved or rejected.
 		###
 		timeout: ( promiseOrValue, milliseconds ) ->
-			deferred = new Deferred()
+			deferred = Ext.create( 'Deft.promise.Deferred' )
 			timeoutId = setTimeout( ->
 				if timeoutId
 					deferred.reject( new Error( 'Promise timed out.' ) )
@@ -170,7 +170,7 @@ Ext.define( 'Deft.promise.Promise',
 					remainingToResolve = promisesOrValues.length
 					results = new Array( promisesOrValues.length )
 					
-					deferred = new Deferred()
+					deferred = Ext.create( 'Deft.promise.Deferred' )
 					
 					if not remainingToResolve
 						deferred.resolve( results )

@@ -29,7 +29,7 @@ Ext.define('Deft.promise.Promise', {
     when: function(promiseOrValue) {
       var deferred;
       deferred = Ext.create('Deft.promise.Deferred');
-      deferred.resolve(value);
+      deferred.resolve(promiseOrValue);
       return deferred.promise;
     },
     /**
@@ -41,9 +41,9 @@ Ext.define('Deft.promise.Promise', {
     */
 
     all: function(promisesOrValues) {
-      return Deft.Promise.map(promisesOrValues, x(function() {
+      return Deft.Promise.map(promisesOrValues, function(x) {
         return x;
-      }));
+      });
     },
     /**
     		* Initiates a competitive race, returning a new {@link Deft.promise.Promise}
@@ -122,7 +122,7 @@ Ext.define('Deft.promise.Promise', {
 
     delay: function(promiseOrValue, milliseconds) {
       var deferred;
-      deferred = new Deferred();
+      deferred = Ext.create('Deft.promise.Deferred');
       setTimeout(function() {
         deferred.resolve(promise);
       }, milliseconds);
@@ -136,7 +136,7 @@ Ext.define('Deft.promise.Promise', {
 
     timeout: function(promiseOrValue, milliseconds) {
       var cancelTimeout, deferred, timeoutId;
-      deferred = new Deferred();
+      deferred = Ext.create('Deft.promise.Deferred');
       timeoutId = setTimeout(function() {
         if (timeoutId) {
           return deferred.reject(new Error('Promise timed out.'));
@@ -184,7 +184,7 @@ Ext.define('Deft.promise.Promise', {
         var deferred, index, promiseOrValue, remainingToResolve, resolve, results, _i, _len;
         remainingToResolve = promisesOrValues.length;
         results = new Array(promisesOrValues.length);
-        deferred = new Deferred();
+        deferred = Ext.create('Deft.promise.Deferred');
         if (!remainingToResolve) {
           deferred.resolve(results);
         } else {
