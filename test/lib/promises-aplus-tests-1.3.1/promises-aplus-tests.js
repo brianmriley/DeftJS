@@ -1,3 +1,7 @@
+(function (){
+	
+	describe("Promises/A+ Compliance Test Suite v1.3.1", function () {
+
 (function(){
 
 "use strict";
@@ -106,8 +110,8 @@ var adapter = global.adapter;
 var fulfilled = adapter.fulfilled;
 var pending = adapter.pending;
 
-var dummy = {}; // we fulfill or reject with this when we don't intend to test against it
-var sentinel = {}; // we want to be equal to this
+var dummy = { dummy: "dummy" }; // we fulfill or reject with this when we don't intend to test against it
+var sentinel = { sentinel: "sentinel" }; // a sentinel fulfillment value to test for with strict equality
 
 describe("3.2.2: If `onFulfilled` is a function,", function () {
     describe("3.2.2.1: it must be called after `promise` is fulfilled, with `promise`’s fulfillment value as its " +
@@ -1095,4 +1099,7 @@ describe("3.2.6: `then` must return a promise: `promise2 = promise1.then(onFulfi
     });
 });
 
+})();
+
+	});
 })();
