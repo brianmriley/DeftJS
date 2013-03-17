@@ -21,6 +21,30 @@ operation.
 Ext.define('Deft.promise.Deferred', {
   alternateClassName: ['Deft.Deferred'],
   requires: ['Deft.promise.Resolver'],
+  statics: {
+    /**
+    		* Returns a new {@link Deft.promise.Promise} that resolves immediately for
+    		* the specified value
+    */
+
+    resolve: function(value) {
+      var deferred;
+      deferred = Ext.create('Deft.promise.Deferred');
+      deferred.resolve(value);
+      return deferred.promise;
+    },
+    /**
+    		* Returns a new {@link Deft.promise.Promise} that rejects immediately with
+    		* the specified error
+    */
+
+    reject: function(error) {
+      var deferred;
+      deferred = Ext.create('Deft.promise.Deferred');
+      deferred.reject(error);
+      return deferred.promise;
+    }
+  },
   constructor: function() {
     var resolver;
     resolver = Ext.create('Deft.promise.Resolver');
