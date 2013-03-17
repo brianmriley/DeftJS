@@ -30,6 +30,13 @@ Ext.define( 'Deft.promise.Promise',
 			return deferred.promise
 		
 		###*
+		* Determines whether the specified value is a Promise (including third-party
+		* untrusted Promises), based on the Promises/A specification feature test.
+		###
+		isPromise: ( value ) ->
+			return ( value and Ext.isFunction( value.then ) ) is true
+		
+		###*
 		* Returns a new {@link Deft.promise.Promise} that will only resolve
 		* once all the specified `promisesOrValues` have resolved.
 		* 
@@ -37,6 +44,8 @@ Ext.define( 'Deft.promise.Promise',
 		* value of each of the `promisesOrValues`.
 		###
 		all: ( promisesOrValues ) ->
+			if not ( Ext.isArray( promisesOrValues ) or Deft.Promise.isPromise( promisesOrValues ) )
+				throw new Error( 'Invalid parameter: expected an Array or Promise of an Array.' )
 			return Deft.Promise.map( promisesOrValues, ( x ) -> x )
 		
 		###*
@@ -48,7 +57,9 @@ Ext.define( 'Deft.promise.Promise',
 		* The resolution value will the first value of `promisesOrValues` to resolve.
 		###
 		any: ( promisesOrValues ) ->
-			return Deft.Promise.some( promisesOrValues, 1 )
+			if not ( Ext.isArray( promisesOrValues ) or Deft.Promise.isPromise( promisesOrValues ) )
+				throw new Error( 'Invalid parameter: expected an Array or Promise of an Array.' )
+			return Deft.Promise.some( promisesOrValues, 1 ).then( ( array ) -> array[ 0 ] )
 		
 		###*
 		* Initiates a competitive race, returning a new {@link Deft.promise.Promise}
@@ -68,10 +79,10 @@ Ext.define( 'Deft.promise.Promise',
 					
 					deferred = Ext.create( 'Deft.promise.Deferred' )
 					
+					errorMessage = if howMany is 1 then 'No Promises were resolved.' else 'Too few Promises were resolved.'
 					if promisesOrValues.length < howMany
-						deferred.reject( new Error( 'Too few Promises or values were supplied to obtain the requested number of resolved values.' ) )
+						deferred.reject( new Error( errorMessage ) )
 					else
-						errorMessage = if howMany is 1 then 'No Promises were resolved.' else 'Too few Promises were resolved.'
 						
 						resolver = ( value ) ->
 							values.push( value )
@@ -187,7 +198,7 @@ Ext.define( 'Deft.promise.Promise',
 						
 						for promiseOrValue, index in promisesOrValues
 							if index of promisesOrValues
-								resolve( array[ index ], index )
+								resolve( promisesOrValues[ index ], index )
 							else
 								remainingToResolve--
 					
