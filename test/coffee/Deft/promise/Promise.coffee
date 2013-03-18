@@ -90,7 +90,7 @@ describe( 'Deft.promise.Promise', ->
 	describe( 'when()', ->
 		values = [ undefined, null, false, 0, 1, 'expected value', [ 1, 2, 3 ], {}, new Error( 'error message' ) ]
 		
-		describe( 'returns a Promise that eventually resolves with the specified value', ->
+		describe( 'returns a Promise that will resolve with the specified value', ->
 			for value in values
 				do ( value ) ->
 					specify( formatValue( value ), ->
@@ -102,7 +102,7 @@ describe( 'Deft.promise.Promise', ->
 			return
 		)
 		
-		describe( 'returns a Promise that eventually resolves when the specified Promise is resolved', ->
+		describe( 'returns a Promise that will resolve with the resolved value for the specified Promise when it resolves', ->
 			for value in values
 				do( value ) ->
 					specify( formatValue( value ), ->
@@ -118,7 +118,7 @@ describe( 'Deft.promise.Promise', ->
 			return
 		)
 		
-		describe( 'returns a Promise that eventually rejects when the specified Promise is rejected', ->
+		describe( 'returns a Promise that will reject with the error associated with the specified Promise when it rejects', ->
 			specify( 'Error: error message', ->
 				deferred = Ext.create( 'Deft.Deferred' )
 				deferred.reject( new Error( 'error message' ) )
@@ -133,7 +133,7 @@ describe( 'Deft.promise.Promise', ->
 			return
 		)
 		
-		describe( 'returns a new Promise that adapts the specified untrusted (aka third-party) then-able', ->
+		describe( 'returns a new Promise that will adapt the specified untrusted (aka third-party) then-able', ->
 			class MockThirdPartyPromise
 				then: ( @successCallback, @failureCallback ) ->
 					switch @state
@@ -212,7 +212,7 @@ describe( 'Deft.promise.Promise', ->
 	)
 	
 	describe( 'all()', ->
-		describe( 'returns a new Promise that resolves with the resolved values for the specified Array of Promises(s) or values.', ->
+		describe( 'returns a new Promise that will resolve with the resolved values for the specified Array of Promises(s) or values.', ->
 			specify( 'Empty Array', ->
 				promise = Deft.Promise.all( [] )
 				
@@ -258,7 +258,7 @@ describe( 'Deft.promise.Promise', ->
 			return 
 		)
 		
-		describe( 'returns a new Promise that resolves with the resolved values for the specified resolved Promise of an Array of Promises(s) or values.', ->
+		describe( 'returns a new Promise that will resolve with the resolved values for the specified resolved Promise of an Array of Promises(s) or values.', ->
 			specify( 'Promise of an empty Array', ->
 				promise = Deft.Promise.all( 
 					Deft.Deferred.resolve(
@@ -328,7 +328,7 @@ describe( 'Deft.promise.Promise', ->
 			return
 		)
 		
-		describe( 'returns a new Promise that rejects with the error associated with the first Promise in the specified Array of Promise(s) or values that rejects', ->
+		describe( 'returns a new Promise that will reject with the error associated with the first Promise in the specified Array of Promise(s) or values that rejects', ->
 			specify( 'Array with one rejected Promise', ->
 				promise = Deft.Promise.all( [ Deft.Deferred.reject( new Error( 'error message' ) ) ] )
 				
@@ -353,7 +353,7 @@ describe( 'Deft.promise.Promise', ->
 			return 
 		)
 		
-		describe( 'returns a new Promise that rejects with the error associated with the first Promise in the specified resolved Promise of an Array of Promise(s) or values that rejects', ->
+		describe( 'returns a new Promise that will reject with the error associated with the first Promise in the specified resolved Promise of an Array of Promise(s) or values that rejects', ->
 			specify( 'Promise of an Array with one rejected Promise', ->
 				promise = Deft.Promise.all( 
 					Deft.Deferred.resolve(
@@ -390,7 +390,7 @@ describe( 'Deft.promise.Promise', ->
 			return 
 		)
 		
-		describe( 'returns a new Promise that rejects with the error associated with the rejected Promise of an Array of Promise(s) or values', ->
+		describe( 'returns a new Promise that will reject with the error associated with the rejected Promise of an Array of Promise(s) or values', ->
 			specify( 'Error: error message', ->
 				promise = Deft.Promise.all( 
 					Deft.Deferred.reject(
@@ -605,7 +605,7 @@ describe( 'Deft.promise.Promise', ->
 			return
 		)
 		
-		describe( 'returns a new Promise that rejects with the error associated with the rejected Promise of an Array of Promise(s) or values', ->
+		describe( 'returns a new Promise that will reject with the error associated with the rejected Promise of an Array of Promise(s) or values', ->
 			specify( 'Error: error message', ->
 				promise = Deft.Promise.any( 
 					Deft.Deferred.reject(
@@ -866,7 +866,7 @@ describe( 'Deft.promise.Promise', ->
 			return
 		)
 		
-		describe( 'returns a new Promise that rejects with the error associated with the rejected Promise of an Array of Promise(s) or values', ->
+		describe( 'returns a new Promise that will reject with the error associated with the rejected Promise of an Array of Promise(s) or values', ->
 			specify( 'Error: error message', ->
 				promise = Deft.Promise.some( 
 					Deft.Deferred.reject(
@@ -915,7 +915,7 @@ describe( 'Deft.promise.Promise', ->
 	describe( 'delay()', ->
 		now = -> new Date().getTime()
 		
-		describe( 'should return a new Promise that resolves after the specified delay', ->
+		describe( 'should return a new Promise that will resolve after the specified delay', ->
 			specify( '0 ms delay', ->
 				promise = Deft.Promise.delay( 0 )
 				
@@ -942,7 +942,7 @@ describe( 'Deft.promise.Promise', ->
 			return
 		)
 		
-		describe( 'should return a new Promise that resolves with the specified Promise or value after the specified delay', ->
+		describe( 'should return a new Promise that will resolve with the specified Promise or value after the specified delay', ->
 			specify( 'value with 0 ms delay', ->
 				promise = Deft.Promise.delay( 'expected value', 0 )
 				
@@ -989,6 +989,10 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.eventually.equal( 'expected value' )
 			)
 			
+			return
+		)
+		
+		describe( 'should return a new Promise that will reject with the error associated with the specified rejected Promise after the specified delay', ->
 			specify( 'rejected Promise with 100 ms delay', ->
 				@slow( 250 )
 				
@@ -1014,6 +1018,78 @@ describe( 'Deft.promise.Promise', ->
 	)
 	
 	describe( 'timeout()', ->
+		describe( 'should return a new Promise that will resolve with the specified Promise or value if it resolves before the specified timeout', ->
+			specify( 'value with 100 ms timeout', ->
+				@slow( 250 )
+				
+				promise = Deft.Promise.timeout(
+					'expected value'
+					100
+				)
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.eventually.equal( 'expected value' )
+			)
+			
+			specify( 'Promise that resolves in 50 ms with a 100 ms timeout', ->
+				@slow( 250 )
+				
+				promise = Deft.Promise.timeout(
+					Deft.Promise.delay( 'expected value', 50 )
+					100
+				)
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.eventually.equal( 'expected value' )
+			)
+			
+			return
+		)
+		
+		describe( 'should return a new Promise that will reject with the error associated with the specified rejected Promise if it rejects before the specified timeout', ->
+			specify( 'Promise that rejects in 50 ms with a 100 ms timeout', ->
+				@slow( 250 )
+				
+				promise = Deft.Promise.timeout(
+					Deft.Promise.delay( Deft.Deferred.reject( new Error( 'error message' ) ), 50 )
+					100
+				)
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.be.rejected.with( Error, 'error message' )
+			)
+			
+			return
+		)
+		
+		describe( 'should return a new Promise that will reject after the specified timeout if the specified Promise or value has not yet resolved or rejected', ->
+			specify( 'Promise that resolves in 100 ms with a 50 ms timeout', ->
+				@slow( 250 )
+				
+				promise = Deft.Promise.timeout(
+					Deft.Promise.delay( 'expected value', 100 )
+					50
+				)
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.be.rejected.with( Error, 'Promise timed out.' )
+			)
+			
+			specify( 'Promise that rejects in 50 ms with a 100 ms timeout', ->
+				@slow( 250 )
+				
+				promise = Deft.Promise.timeout(
+					Deft.Promise.delay( Deft.Deferred.reject( new Error( 'error message' ) ), 100 )
+					50
+				)
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.be.rejected.with( Error, 'Promise timed out.' )
+			)
+			
+			return
+		)
+		
 		return
 	)
 	

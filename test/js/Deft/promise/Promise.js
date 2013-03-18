@@ -69,7 +69,7 @@ describe('Deft.promise.Promise', function() {
   describe('when()', function() {
     var values;
     values = [void 0, null, false, 0, 1, 'expected value', [1, 2, 3], {}, new Error('error message')];
-    describe('returns a Promise that eventually resolves with the specified value', function() {
+    describe('returns a Promise that will resolve with the specified value', function() {
       var value, _fn, _i, _len;
       _fn = function(value) {
         return specify(formatValue(value), function() {
@@ -84,7 +84,7 @@ describe('Deft.promise.Promise', function() {
         _fn(value);
       }
     });
-    describe('returns a Promise that eventually resolves when the specified Promise is resolved', function() {
+    describe('returns a Promise that will resolve with the resolved value for the specified Promise when it resolves', function() {
       var value, _fn, _i, _len;
       _fn = function(value) {
         return specify(formatValue(value), function() {
@@ -102,7 +102,7 @@ describe('Deft.promise.Promise', function() {
         _fn(value);
       }
     });
-    describe('returns a Promise that eventually rejects when the specified Promise is rejected', function() {
+    describe('returns a Promise that will reject with the error associated with the specified Promise when it rejects', function() {
       specify('Error: error message', function() {
         var deferred, promise;
         deferred = Ext.create('Deft.Deferred');
@@ -113,7 +113,7 @@ describe('Deft.promise.Promise', function() {
         return promise.should.be.rejected["with"](Error, 'error message');
       });
     });
-    describe('returns a new Promise that adapts the specified untrusted (aka third-party) then-able', function() {
+    describe('returns a new Promise that will adapt the specified untrusted (aka third-party) then-able', function() {
       var MockThirdPartyPromise;
       MockThirdPartyPromise = (function() {
 
@@ -200,7 +200,7 @@ describe('Deft.promise.Promise', function() {
     });
   });
   describe('all()', function() {
-    describe('returns a new Promise that resolves with the resolved values for the specified Array of Promises(s) or values.', function() {
+    describe('returns a new Promise that will resolve with the resolved values for the specified Array of Promises(s) or values.', function() {
       specify('Empty Array', function() {
         var promise;
         promise = Deft.Promise.all([]);
@@ -238,7 +238,7 @@ describe('Deft.promise.Promise', function() {
         return promise.should.eventually.deep.equal([1, 2, 3]);
       });
     });
-    describe('returns a new Promise that resolves with the resolved values for the specified resolved Promise of an Array of Promises(s) or values.', function() {
+    describe('returns a new Promise that will resolve with the resolved values for the specified resolved Promise of an Array of Promises(s) or values.', function() {
       specify('Promise of an empty Array', function() {
         var promise;
         promise = Deft.Promise.all(Deft.Deferred.resolve([]));
@@ -276,7 +276,7 @@ describe('Deft.promise.Promise', function() {
         return promise.should.eventually.deep.equal([1, 2, 3]);
       });
     });
-    describe('returns a new Promise that rejects with the error associated with the first Promise in the specified Array of Promise(s) or values that rejects', function() {
+    describe('returns a new Promise that will reject with the error associated with the first Promise in the specified Array of Promise(s) or values that rejects', function() {
       specify('Array with one rejected Promise', function() {
         var promise;
         promise = Deft.Promise.all([Deft.Deferred.reject(new Error('error message'))]);
@@ -296,7 +296,7 @@ describe('Deft.promise.Promise', function() {
         return promise.should.be.rejected["with"](Error, 'error message');
       });
     });
-    describe('returns a new Promise that rejects with the error associated with the first Promise in the specified resolved Promise of an Array of Promise(s) or values that rejects', function() {
+    describe('returns a new Promise that will reject with the error associated with the first Promise in the specified resolved Promise of an Array of Promise(s) or values that rejects', function() {
       specify('Promise of an Array with one rejected Promise', function() {
         var promise;
         promise = Deft.Promise.all(Deft.Deferred.resolve([Deft.Deferred.reject(new Error('error message'))]));
@@ -316,7 +316,7 @@ describe('Deft.promise.Promise', function() {
         return promise.should.be.rejected["with"](Error, 'error message');
       });
     });
-    describe('returns a new Promise that rejects with the error associated with the rejected Promise of an Array of Promise(s) or values', function() {
+    describe('returns a new Promise that will reject with the error associated with the rejected Promise of an Array of Promise(s) or values', function() {
       specify('Error: error message', function() {
         var promise;
         promise = Deft.Promise.all(Deft.Deferred.reject(new Error('error message')));
@@ -463,7 +463,7 @@ describe('Deft.promise.Promise', function() {
         return promise.should.be.rejected["with"](Error, 'No Promises were resolved.');
       });
     });
-    describe('returns a new Promise that rejects with the error associated with the rejected Promise of an Array of Promise(s) or values', function() {
+    describe('returns a new Promise that will reject with the error associated with the rejected Promise of an Array of Promise(s) or values', function() {
       specify('Error: error message', function() {
         var promise;
         promise = Deft.Promise.any(Deft.Deferred.reject(new Error('error message')));
@@ -640,7 +640,7 @@ describe('Deft.promise.Promise', function() {
         return promise.should.be.rejected["with"](Error, 'Too few Promises were resolved.');
       });
     });
-    describe('returns a new Promise that rejects with the error associated with the rejected Promise of an Array of Promise(s) or values', function() {
+    describe('returns a new Promise that will reject with the error associated with the rejected Promise of an Array of Promise(s) or values', function() {
       specify('Error: error message', function() {
         var promise;
         promise = Deft.Promise.some(Deft.Deferred.reject(new Error('error message')), 2);
@@ -681,7 +681,7 @@ describe('Deft.promise.Promise', function() {
     now = function() {
       return new Date().getTime();
     };
-    describe('should return a new Promise that resolves after the specified delay', function() {
+    describe('should return a new Promise that will resolve after the specified delay', function() {
       specify('0 ms delay', function() {
         var promise;
         promise = Deft.Promise.delay(0);
@@ -701,7 +701,7 @@ describe('Deft.promise.Promise', function() {
         return promise.should.eventually.equal(void 0);
       });
     });
-    describe('should return a new Promise that resolves with the specified Promise or value after the specified delay', function() {
+    describe('should return a new Promise that will resolve with the specified Promise or value after the specified delay', function() {
       specify('value with 0 ms delay', function() {
         var promise;
         promise = Deft.Promise.delay('expected value', 0);
@@ -738,6 +738,8 @@ describe('Deft.promise.Promise', function() {
         });
         return promise.should.eventually.equal('expected value');
       });
+    });
+    describe('should return a new Promise that will reject with the error associated with the specified rejected Promise after the specified delay', function() {
       specify('rejected Promise with 100 ms delay', function() {
         var promise, start;
         this.slow(250);
@@ -754,7 +756,49 @@ describe('Deft.promise.Promise', function() {
       });
     });
   });
-  describe('timeout()', function() {});
+  describe('timeout()', function() {
+    describe('should return a new Promise that will resolve with the specified Promise or value if it resolves before the specified timeout', function() {
+      specify('value with 100 ms timeout', function() {
+        var promise;
+        this.slow(250);
+        promise = Deft.Promise.timeout('expected value', 100);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.equal('expected value');
+      });
+      specify('Promise that resolves in 50 ms with a 100 ms timeout', function() {
+        var promise;
+        this.slow(250);
+        promise = Deft.Promise.timeout(Deft.Promise.delay('expected value', 50), 100);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.equal('expected value');
+      });
+    });
+    describe('should return a new Promise that will reject with the error associated with the specified rejected Promise if it rejects before the specified timeout', function() {
+      specify('Promise that rejects in 50 ms with a 100 ms timeout', function() {
+        var promise;
+        this.slow(250);
+        promise = Deft.Promise.timeout(Deft.Promise.delay(Deft.Deferred.reject(new Error('error message')), 50), 100);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.be.rejected["with"](Error, 'error message');
+      });
+    });
+    describe('should return a new Promise that will reject after the specified timeout if the specified Promise or value has not yet resolved or rejected', function() {
+      specify('Promise that resolves in 100 ms with a 50 ms timeout', function() {
+        var promise;
+        this.slow(250);
+        promise = Deft.Promise.timeout(Deft.Promise.delay('expected value', 100), 50);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.be.rejected["with"](Error, 'Promise timed out.');
+      });
+      specify('Promise that rejects in 50 ms with a 100 ms timeout', function() {
+        var promise;
+        this.slow(250);
+        promise = Deft.Promise.timeout(Deft.Promise.delay(Deft.Deferred.reject(new Error('error message')), 100), 50);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.be.rejected["with"](Error, 'Promise timed out.');
+      });
+    });
+  });
   describe('memoize()', function() {});
   describe('map()', function() {});
   return describe('reduce()', function() {});
