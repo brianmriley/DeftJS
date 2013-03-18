@@ -151,7 +151,7 @@ Ext.define('Deft.promise.Promise', {
       var deferred;
       deferred = Ext.create('Deft.promise.Deferred');
       setTimeout(function() {
-        deferred.resolve(promise);
+        deferred.resolve(promiseOrValue);
       }, milliseconds);
       return deferred.promise;
     },

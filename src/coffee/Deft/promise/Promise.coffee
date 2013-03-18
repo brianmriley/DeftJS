@@ -132,7 +132,7 @@ Ext.define( 'Deft.promise.Promise',
 			deferred = Ext.create( 'Deft.promise.Deferred' )
 			setTimeout( 
 				->
-					deferred.resolve( promise )
+					deferred.resolve( promiseOrValue )
 					return
 				milliseconds
 			)
