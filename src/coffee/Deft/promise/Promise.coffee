@@ -129,6 +129,11 @@ Ext.define( 'Deft.promise.Promise',
 		* delay (in milliseconds).
 		###
 		delay: ( promiseOrValue, milliseconds ) ->
+			if arguments.length is 1
+				milliseconds = promiseOrValue
+				promiseOrValue = undefined
+			milliseconds = Math.max( milliseconds, 0 )
+			
 			deferred = Ext.create( 'Deft.promise.Deferred' )
 			setTimeout( 
 				->
