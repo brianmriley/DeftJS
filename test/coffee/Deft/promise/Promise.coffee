@@ -924,6 +924,8 @@ describe( 'Deft.promise.Promise', ->
 			)
 			
 			specify( 'value with 100 ms delay', ->
+				@slow( 250 )
+				
 				promise = Deft.Promise.delay( 100 )
 				
 				start = now()
@@ -956,6 +958,8 @@ describe( 'Deft.promise.Promise', ->
 			)
 			
 			specify( 'value with 100 ms delay', ->
+				@slow( 250 )
+				
 				promise = Deft.Promise.delay( 'expected value', 100 )
 				
 				start = now()
@@ -970,6 +974,8 @@ describe( 'Deft.promise.Promise', ->
 			)
 			
 			specify( 'resolved Promise with 100 ms delay', ->
+				@slow( 250 )
+				
 				promise = Deft.Promise.delay( Deft.Deferred.resolve( 'expected value' ), 100 )
 				
 				start = now()
@@ -984,6 +990,8 @@ describe( 'Deft.promise.Promise', ->
 			)
 			
 			specify( 'rejected Promise with 100 ms delay', ->
+				@slow( 250 )
+				
 				promise = Deft.Promise.delay( Deft.Deferred.reject( new Error( 'error message' ) ), 100 )
 				
 				start = now()

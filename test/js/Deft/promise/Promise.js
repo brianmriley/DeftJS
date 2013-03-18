@@ -690,6 +690,7 @@ describe('Deft.promise.Promise', function() {
       });
       specify('value with 100 ms delay', function() {
         var promise, start;
+        this.slow(250);
         promise = Deft.Promise.delay(100);
         start = now();
         promise.should.be.an["instanceof"](Deft.Promise);
@@ -715,6 +716,7 @@ describe('Deft.promise.Promise', function() {
       });
       specify('value with 100 ms delay', function() {
         var promise, start;
+        this.slow(250);
         promise = Deft.Promise.delay('expected value', 100);
         start = now();
         promise.should.be.an["instanceof"](Deft.Promise);
@@ -726,6 +728,7 @@ describe('Deft.promise.Promise', function() {
       });
       specify('resolved Promise with 100 ms delay', function() {
         var promise, start;
+        this.slow(250);
         promise = Deft.Promise.delay(Deft.Deferred.resolve('expected value'), 100);
         start = now();
         promise.should.be.an["instanceof"](Deft.Promise);
@@ -737,6 +740,7 @@ describe('Deft.promise.Promise', function() {
       });
       specify('rejected Promise with 100 ms delay', function() {
         var promise, start;
+        this.slow(250);
         promise = Deft.Promise.delay(Deft.Deferred.reject(new Error('error message')), 100);
         start = now();
         promise.should.be.an["instanceof"](Deft.Promise);
