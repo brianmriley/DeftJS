@@ -58,7 +58,7 @@ Ext.define('Deft.promise.Promise', {
     },
     /**
     		* Initiates a competitive race, returning a new {@link Deft.promise.Promise}
-    		* that will resolve when any one of the supplied `promisesOrValues`
+    		* that will resolve when any one of the specified `promisesOrValues`
     		* have resolved, or will reject when all `promisesOrValues` have
     		* rejected or cancelled.
     		* 
@@ -71,11 +71,17 @@ Ext.define('Deft.promise.Promise', {
       }
       return Deft.Promise.some(promisesOrValues, 1).then(function(array) {
         return array[0];
+      }, function(error) {
+        if (error.message === 'Too few Promises were resolved.') {
+          throw new Error('No Promises were resolved.');
+        } else {
+          throw error;
+        }
       });
     },
     /**
     		* Initiates a competitive race, returning a new {@link Deft.promise.Promise}
-    		* that will resolve when `howMany` of the supplied `promisesOrValues`
+    		* that will resolve when `howMany` of the specified `promisesOrValues`
     		* have resolved, or will reject when it becomes impossible for
     		* `howMany` to resolve.
     		* 
@@ -84,15 +90,20 @@ Ext.define('Deft.promise.Promise', {
     */
 
     some: function(promisesOrValues, howMany) {
+      if (!(Ext.isArray(promisesOrValues) || Deft.Promise.isPromise(promisesOrValues))) {
+        throw new Error('Invalid parameter: expected an Array or Promise of an Array.');
+      }
+      if (!Ext.isNumeric(howMany) || howMany <= 0) {
+        throw new Error('Invalid parameter: expected a positive integer.');
+      }
       return Deft.Promise.when(promisesOrValues).then(function(promisesOrValues) {
-        var complete, deferred, errorMessage, index, onReject, onResolve, promiseOrValue, rejecter, remainingToReject, remainingToResolve, resolver, values, _i, _len;
+        var complete, deferred, index, onReject, onResolve, promiseOrValue, rejecter, remainingToReject, remainingToResolve, resolver, values, _i, _len;
         values = [];
         remainingToResolve = howMany;
         remainingToReject = (promisesOrValues.length - remainingToResolve) + 1;
         deferred = Ext.create('Deft.promise.Deferred');
-        errorMessage = howMany === 1 ? 'No Promises were resolved.' : 'Too few Promises were resolved.';
         if (promisesOrValues.length < howMany) {
-          deferred.reject(new Error(errorMessage));
+          deferred.reject(new Error('Too few Promises were resolved.'));
         } else {
           resolver = function(value) {
             values.push(value);
@@ -107,7 +118,7 @@ Ext.define('Deft.promise.Promise', {
             remainingToReject--;
             if (remainingToReject === 0) {
               complete();
-              deferred.reject(new Error(errorMessage));
+              deferred.reject(new Error('Too few Promises were resolved.'));
             }
             return error;
           };

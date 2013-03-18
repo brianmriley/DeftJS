@@ -50,7 +50,7 @@ Ext.define( 'Deft.promise.Promise',
 		
 		###*
 		* Initiates a competitive race, returning a new {@link Deft.promise.Promise}
-		* that will resolve when any one of the supplied `promisesOrValues`
+		* that will resolve when any one of the specified `promisesOrValues`
 		* have resolved, or will reject when all `promisesOrValues` have
 		* rejected or cancelled.
 		* 
@@ -59,11 +59,20 @@ Ext.define( 'Deft.promise.Promise',
 		any: ( promisesOrValues ) ->
 			if not ( Ext.isArray( promisesOrValues ) or Deft.Promise.isPromise( promisesOrValues ) )
 				throw new Error( 'Invalid parameter: expected an Array or Promise of an Array.' )
-			return Deft.Promise.some( promisesOrValues, 1 ).then( ( array ) -> array[ 0 ] )
+			return Deft.Promise.some( promisesOrValues, 1 )
+				.then( 
+					( array ) -> 
+						return array[ 0 ]
+					( error ) ->
+						if error.message is 'Too few Promises were resolved.'
+							throw new Error( 'No Promises were resolved.' )
+						else
+							throw error
+				)
 		
 		###*
 		* Initiates a competitive race, returning a new {@link Deft.promise.Promise}
-		* that will resolve when `howMany` of the supplied `promisesOrValues`
+		* that will resolve when `howMany` of the specified `promisesOrValues`
 		* have resolved, or will reject when it becomes impossible for
 		* `howMany` to resolve.
 		* 
@@ -71,6 +80,10 @@ Ext.define( 'Deft.promise.Promise',
 		* of `promisesOrValues` to resolve.
 		###
 		some: ( promisesOrValues, howMany ) ->
+			if not ( Ext.isArray( promisesOrValues ) or Deft.Promise.isPromise( promisesOrValues ) )
+				throw new Error( 'Invalid parameter: expected an Array or Promise of an Array.' )
+			if not Ext.isNumeric( howMany ) or howMany <= 0
+				throw new Error( 'Invalid parameter: expected a positive integer.' )
 			return Deft.Promise.when( promisesOrValues ).then(
 				( promisesOrValues ) ->
 					values = []
@@ -79,9 +92,8 @@ Ext.define( 'Deft.promise.Promise',
 					
 					deferred = Ext.create( 'Deft.promise.Deferred' )
 					
-					errorMessage = if howMany is 1 then 'No Promises were resolved.' else 'Too few Promises were resolved.'
 					if promisesOrValues.length < howMany
-						deferred.reject( new Error( errorMessage ) )
+						deferred.reject( new Error( 'Too few Promises were resolved.' ) )
 					else
 						
 						resolver = ( value ) ->
@@ -95,7 +107,7 @@ Ext.define( 'Deft.promise.Promise',
 							remainingToReject--
 							if remainingToReject is 0
 								complete()
-								deferred.reject( new Error( errorMessage ) )
+								deferred.reject( new Error( 'Too few Promises were resolved.' ) )
 							return error
 						
 						complete = ->

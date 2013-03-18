@@ -27,6 +27,59 @@ describe( 'Deft.promise.Promise', ->
 			return "\"#{ value }\""
 		return '' + value
 	
+	chai.use( ( chai, utils ) ->
+		Assertion.addMethod( 'memberOf', ( array ) ->
+			value = utils.flag( @, 'object' )
+			@assert(
+				Ext.Array.contains( array, value ),
+				'expected #{this} to be a member of ' + utils.inspect( array )
+				'expected #{this} to not be a member of ' +  + utils.inspect( array )
+			)
+			return
+		)
+		
+		Assertion.addMethod( 'membersOf', ( array ) ->
+			values = utils.flag( @, 'object' )
+			expect( values ).to.be.an.Array
+			@assert(
+				Ext.Array.filter( values, ( value ) -> not Ext.Array.contains( array, value ) ).length is 0
+				'expected #{this} to be members of ' + utils.inspect( array )
+				'expected #{this} to not be members of ' +  + utils.inspect( array )
+			)
+			return
+		)
+		
+		Assertion.addProperty( 'unique', ->
+			values = utils.flag( @, 'object' )
+			expect( values ).to.be.an.instanceOf( Array )
+			@assert(
+				Ext.Array.unique( values ).length is values.length
+				'expected #{this} to be comprised of unique values'
+				'expected #{this} not to be comprised of unique values'
+			)
+			return
+		)
+	)
+	
+	describe( 'Custom Assertions', ->
+		specify( 'memberOf', ->
+			expect( 1 ).to.be.memberOf( [ 1, 2, 3 ] )
+			expect( 0 ).not.to.be.memberOf( [ 1, 2, 3 ] )
+		)
+		
+		specify( 'membersOf', ->
+			expect( [ 1 ] ).to.be.membersOf( [ 1, 2, 3 ] )
+			expect( [ 1, 2 ] ).to.be.membersOf( [ 1, 2, 3 ] )
+			expect( [ 0 ] ).not.to.be.membersOf( [ 1, 2, 3 ] )
+			expect( [ 0, 5 ] ).not.to.be.membersOf( [ 1, 2, 3 ] )
+		)
+		
+		specify( 'unique', ->
+			expect( [ 1, 2, 3 ] ).to.be.unique
+			expect( [ 1, 2, 1 ] ).not.to.be.unique
+		)
+	)
+	
 	describe( 'when()', ->
 		values = [ undefined, null, false, 0, 1, 'expected value', [ 1, 2, 3 ], {}, new Error( 'error message' ) ]
 		
@@ -347,31 +400,31 @@ describe( 'Deft.promise.Promise', ->
 			)
 			
 			specify( 'Array of values', ->
-				promise = Deft.Promise.any( [ 'expected value', 'expected value', 'expected value' ] )
+				promise = Deft.Promise.any( [ 1, 2, 3 ] )
 				
 				promise.should.be.an.instanceof( Deft.Promise )
-				promise.should.eventually.equal( 'expected value' )
+				promise.should.eventually.be.a.memberOf( [ 1, 2, 3 ] )
 			)
 			
 			specify( 'Sparse Array', ->
-				promise = Deft.Promise.any( `[,'expected value',,'expected value','expected value']` )
+				promise = Deft.Promise.any( `[,2,,4,5]` )
 				
 				promise.should.be.an.instanceof( Deft.Promise )
-				promise.should.eventually.equal( 'expected value' )
+				promise.should.eventually.be.a.memberOf( [ 2, 4, 5 ] )
 			)
 			
 			specify( 'Array with one resolved Promise(s)', ->
 				promise = Deft.Promise.any( [ Deft.Deferred.resolve( 'expected value' ) ] )
 				
 				promise.should.be.an.instanceof( Deft.Promise )
-				promise.should.eventually.deep.equal( 'expected value' )
+				promise.should.eventually.equal( 'expected value' )
 			)
 			
 			specify( 'Array of resolved Promise(s)', ->
-				promise = Deft.Promise.any( [ Deft.Deferred.resolve( 'expected value' ), Deft.Deferred.resolve( 'expected value' ), Deft.Deferred.resolve( 'expected value' ) ] )
+				promise = Deft.Promise.any( [ Deft.Deferred.resolve( 1 ), Deft.Deferred.resolve( 2 ), Deft.Deferred.resolve( 3 ) ] )
 				
 				promise.should.be.an.instanceof( Deft.Promise )
-				promise.should.eventually.equal( 'expected value' )
+				promise.should.eventually.be.a.memberOf( [ 1, 2, 3 ] )
 			)
 			
 			specify( 'Array of rejected Promise(s) and one resolved Promise', ->
@@ -387,10 +440,17 @@ describe( 'Deft.promise.Promise', ->
 				promise.should.be.an.instanceof( Deft.Promise )
 				promise.should.eventually.equal( 'expected value' )
 			)
+			
+			specify( 'Array of pending and rejected Promise(s) and multiple resolved Promises', ->
+				promise = Deft.Promise.any( [ Ext.create( 'Deft.Deferred' ).promise, Deft.Deferred.resolve( 1 ), Deft.Deferred.reject( 'error message' ), Deft.Deferred.resolve( 2 ) ] )
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				promise.should.eventually.be.a.memberOf( [ 1, 2 ] )
+			)
 		)
 		
 		describe( 'returns a new Promise that will resolve once any one of the specified resolved Promise of an Array of Promises(s) or values have resolved.', ->
-			specify( 'Array with one value', ->
+			specify( 'Promise of an Array with one value', ->
 				promise = Deft.Promise.any( 
 					Deft.Deferred.resolve(
 						[ 'expected value' ]
@@ -401,29 +461,29 @@ describe( 'Deft.promise.Promise', ->
 				promise.should.eventually.equal( 'expected value' )
 			)
 			
-			specify( 'Array of values', ->
+			specify( 'Promise of an Array of values', ->
 				promise = Deft.Promise.any(
 					Deft.Deferred.resolve(
-						[ 'expected value', 'expected value', 'expected value' ]
+						[ 1, 2, 3 ]
 					)
 				)
 				
 				promise.should.be.an.instanceof( Deft.Promise )
-				promise.should.eventually.equal( 'expected value' )
+				promise.should.eventually.be.a.memberOf( [ 1, 2, 3 ] )
 			)
 			
-			specify( 'Sparse Array', ->
+			specify( 'Promise of a sparse Array', ->
 				promise = Deft.Promise.any(
 					Deft.Deferred.resolve(
-						`[,'expected value',,'expected value','expected value']`
+						`[,2,,4,5]`
 					)
 				)
 				
 				promise.should.be.an.instanceof( Deft.Promise )
-				promise.should.eventually.equal( 'expected value' )
+				promise.should.eventually.be.a.memberOf( [ 2, 4, 5 ] )
 			)
 			
-			specify( 'Array with one resolved Promise(s)', ->
+			specify( 'Promise of an Array with one resolved Promise(s)', ->
 				promise = Deft.Promise.any( 
 					Deft.Deferred.resolve(
 						[ Deft.Deferred.resolve( 'expected value' ) ]
@@ -431,21 +491,21 @@ describe( 'Deft.promise.Promise', ->
 				)
 				
 				promise.should.be.an.instanceof( Deft.Promise )
-				promise.should.eventually.deep.equal( 'expected value' )
+				promise.should.eventually.equal( 'expected value' )
 			)
 			
-			specify( 'Array of resolved Promise(s)', ->
+			specify( 'Promise of an Array of resolved Promise(s)', ->
 				promise = Deft.Promise.any( 
 					Deft.Deferred.resolve(
-						[ Deft.Deferred.resolve( 'expected value' ), Deft.Deferred.resolve( 'expected value' ), Deft.Deferred.resolve( 'expected value' ) ]
+						[ Deft.Deferred.resolve( 1 ), Deft.Deferred.resolve( 2 ), Deft.Deferred.resolve( 3 ) ]
 					)
 				)
 				
 				promise.should.be.an.instanceof( Deft.Promise )
-				promise.should.eventually.equal( 'expected value' )
+				promise.should.eventually.to.be.a.memberOf( [ 1, 2, 3 ] )
 			)
 			
-			specify( 'Array of rejected Promise(s) and one resolved Promise', ->
+			specify( 'Promise of an Array of rejected Promise(s) and one resolved Promise', ->
 				promise = Deft.Promise.any( 
 					Deft.Deferred.resolve(
 						[ Deft.Deferred.reject( 'error message' ), Deft.Deferred.resolve( 'expected value' ), Deft.Deferred.reject( 'error message' ) ]
@@ -456,7 +516,7 @@ describe( 'Deft.promise.Promise', ->
 				promise.should.eventually.equal( 'expected value' )
 			)
 			
-			specify( 'Array of pending and rejected Promise(s) and one resolved Promise', ->
+			specify( 'Promise of an Array of pending and rejected Promise(s) and one resolved Promise', ->
 				promise = Deft.Promise.any( 
 					Deft.Deferred.resolve(
 						[ Ext.create( 'Deft.Deferred' ).promise, Deft.Deferred.resolve( 'expected value' ), Deft.Deferred.reject( 'error message' ) ]
@@ -465,6 +525,17 @@ describe( 'Deft.promise.Promise', ->
 				
 				promise.should.be.an.instanceof( Deft.Promise )
 				promise.should.eventually.equal( 'expected value' )
+			)
+			
+			specify( 'Promise of an Array of pending and rejected Promise(s) and multiple resolved Promises', ->
+				promise = Deft.Promise.any( 
+					Deft.Deferred.resolve(
+						[ Ext.create( 'Deft.Deferred' ).promise, Deft.Deferred.resolve( 1 ), Deft.Deferred.reject( 'error message' ), Deft.Deferred.resolve( 2 ) ]
+					)
+				)
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				promise.should.eventually.be.a.memberOf( [ 1, 2 ] )
 			)
 		)
 		
@@ -520,6 +591,270 @@ describe( 'Deft.promise.Promise', ->
 	)
 	
 	describe( 'some()', ->
+		describe( 'returns a new Promise that will resolve once the specified number of the specified Array of Promises(s) or values have resolved.', ->
+			specify( 'Array with one value', ->
+				promise = Deft.Promise.some( [ 'expected value' ], 1 )
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				promise.should.eventually.deep.equal( [ 'expected value' ] )
+			)
+			
+			specify( 'Array of values', ->
+				promise = Deft.Promise.some( [ 1, 2, 3 ], 2 )
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				promise.should.eventually.have.a.lengthOf( 2 )
+				promise.should.eventually.be.membersOf( [ 1, 2, 3 ] )
+			)
+			
+			specify( 'Sparse Array', ->
+				promise = Deft.Promise.some( `[,2,,4,5]`, 2 )
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				promise.should.eventually.have.a.lengthOf( 2 )
+				promise.should.eventually.be.membersOf( [ 2, 4, 5 ] )
+			)
+			
+			specify( 'Array with one resolved Promise(s)', ->
+				promise = Deft.Promise.some( [ Deft.Deferred.resolve( 'expected value' ) ], 1 )
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				promise.should.eventually.deep.equal( [ 'expected value' ] )
+			)
+			
+			specify( 'Array of resolved Promise(s)', ->
+				promise = Deft.Promise.some( [ Deft.Deferred.resolve( 1 ), Deft.Deferred.resolve( 2 ), Deft.Deferred.resolve( 3 ) ], 2 )
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				promise.should.eventually.have.a.lengthOf( 2 )
+				promise.should.eventually.be.membersOf( [ 1, 2, 3 ] )
+			)
+			
+			specify( 'Array of rejected Promise(s) and one resolved Promise', ->
+				promise = Deft.Promise.some( [ Deft.Deferred.reject( 'error message' ), Deft.Deferred.resolve( 'expected value' ), Deft.Deferred.reject( 'error message' ) ], 1 )
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				promise.should.eventually.deep.equal( [ 'expected value' ] )
+			)
+			
+			specify( 'Array of pending and rejected Promise(s) and one resolved Promise', ->
+				promise = Deft.Promise.some( [ Ext.create( 'Deft.Deferred' ).promise, Deft.Deferred.resolve( 'expected value' ), Deft.Deferred.reject( 'error message' ) ], 1 )
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				promise.should.eventually.deep.equal( [ 'expected value' ] )
+			)
+			
+			specify( 'Array of rejected Promise(s) and multiple resolved Promises', ->
+				promise = Deft.Promise.some( [ Deft.Deferred.reject( 'error message' ), Deft.Deferred.resolve( 1 ), Deft.Deferred.reject( 'error message' ), Deft.Deferred.resolve( 2 ) ], 2 )
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				promise.should.eventually.have.a.lengthOf( 2 )
+				promise.should.eventually.be.membersOf( [ 1, 2 ] )
+			)
+			
+			specify( 'Array of pending and rejected Promise(s) and multiple resolved Promises', ->
+				promise = Deft.Promise.some( [ Ext.create( 'Deft.Deferred' ).promise, Deft.Deferred.resolve( 1 ), Deft.Deferred.reject( 'error message' ), Deft.Deferred.resolve( 2 ) ], 2 )
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				promise.should.eventually.have.a.lengthOf( 2 )
+				promise.should.eventually.be.membersOf( [ 1, 2 ] )
+			)
+		)
+		
+		describe( 'returns a new Promise that will resolve once the specified number of the specified resolved Promise of an Array of Promises(s) or values have resolved.', ->
+			specify( 'Promise of an Array with one value', ->
+				promise = Deft.Promise.some( 
+					Deft.Promise.when(
+						[ 'expected value' ]
+					)
+					1
+				)
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				promise.should.eventually.deep.equal( [ 'expected value' ] )
+			)
+			
+			specify( 'Promise of an Array of values', ->
+				promise = Deft.Promise.some( 
+					Deft.Promise.when(
+						[ 1, 2, 3 ]
+					)
+					2
+				)
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				promise.should.eventually.have.a.lengthOf( 2 )
+				promise.should.eventually.be.membersOf( [ 1, 2, 3 ] )
+			)
+			
+			specify( 'Promise of a sparse Array', ->
+				promise = Deft.Promise.some( 
+					Deft.Promise.when(
+						`[,2,,4,5]`
+					)
+					2
+				)
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				promise.should.eventually.have.a.lengthOf( 2 )
+				promise.should.eventually.be.membersOf( [ 2, 4, 5 ] )
+			)
+			
+			specify( 'Promise of an Array with one resolved Promise(s)', ->
+				promise = Deft.Promise.some( 
+					Deft.Promise.when(
+						[ Deft.Deferred.resolve( 'expected value' ) ]
+					)
+					1
+				)
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				promise.should.eventually.deep.equal( [ 'expected value' ] )
+			)
+			
+			specify( 'Promise of an Array of resolved Promise(s)', ->
+				promise = Deft.Promise.some( 
+					Deft.Promise.when(
+						[ Deft.Deferred.resolve( 1 ), Deft.Deferred.resolve( 2 ), Deft.Deferred.resolve( 3 ) ]
+					)
+					2
+				)
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				promise.should.eventually.have.a.lengthOf( 2 )
+				promise.should.eventually.be.membersOf( [ 1, 2, 3 ] )
+			)
+			
+			specify( 'Promise of an Array of rejected Promise(s) and one resolved Promise', ->
+				promise = Deft.Promise.some( 
+					Deft.Promise.when(
+						[ Deft.Deferred.reject( 'error message' ), Deft.Deferred.resolve( 'expected value' ), Deft.Deferred.reject( 'error message' ) ]
+					)
+					1
+				)
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				promise.should.eventually.deep.equal( [ 'expected value' ] )
+			)
+			
+			specify( 'Promise of an Array of pending and rejected Promise(s) and one resolved Promise', ->
+				promise = Deft.Promise.some( 
+					Deft.Promise.when(
+						[ Ext.create( 'Deft.Deferred' ).promise, Deft.Deferred.resolve( 'expected value' ), Deft.Deferred.reject( 'error message' ) ]
+					)
+					1
+				)
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				promise.should.eventually.deep.equal( [ 'expected value' ] )
+			)
+			
+			specify( 'Promise of an Array of rejected Promise(s) and multiple resolved Promises', ->
+				promise = Deft.Promise.some( 
+					Deft.Promise.when(
+						[ Deft.Deferred.reject( 'error message' ), Deft.Deferred.resolve( 1 ), Deft.Deferred.reject( 'error message' ), Deft.Deferred.resolve( 2 ) ]
+					)
+					2
+				)
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				promise.should.eventually.have.a.lengthOf( 2 )
+				promise.should.eventually.be.membersOf( [ 1, 2 ] )
+			)
+			
+			specify( 'Promise of an Array of pending and rejected Promise(s) and multiple resolved Promises', ->
+				promise = Deft.Promise.some( 
+					Deft.Promise.when(
+						[ Ext.create( 'Deft.Deferred' ).promise, Deft.Deferred.resolve( 1 ), Deft.Deferred.reject( 'error message' ), Deft.Deferred.resolve( 2 ) ]
+					)
+					2
+				)
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				promise.should.eventually.have.a.lengthOf( 2 )
+				promise.should.eventually.be.membersOf( [ 1, 2 ] )
+			)
+		)
+		
+		describe( 'returns a new Promise that will reject if too few of the specified Array of Promises(s) or values resolves.', ->
+			specify( 'Empty Array with one resolved value requested', ->
+				promise = Deft.Promise.some( [], 1 )
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				promise.should.be.rejected.with( 'Too few Promises were resolved.' )
+			)
+			
+			specify( 'Empty Array with multiple resolved values requested', ->
+				promise = Deft.Promise.some( [], 2 )
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				promise.should.be.rejected.with( 'Too few Promises were resolved.' )
+			)
+			
+			specify( 'Array with one rejected Promise(s) with one resolved value requested', ->
+				promise = Deft.Promise.some( [ Deft.Deferred.reject( 'error message' ) ], 1 )
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				promise.should.be.rejected.with( 'Too few Promises were resolved.' )
+			)
+			
+			specify( 'Array with one rejected Promise(s) with multiple resolved values requested', ->
+				promise = Deft.Promise.some( [ Deft.Deferred.reject( 'error message' ) ], 2 )
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				promise.should.be.rejected.with( 'Too few Promises were resolved.' )
+			)
+			
+			specify( 'Array of rejected Promise(s) with one resolved value requested', ->
+				promise = Deft.Promise.some( [ Deft.Deferred.reject( 'error message' ), Deft.Deferred.reject( 'error message' ), Deft.Deferred.reject( 'error message' ) ], 1 )
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				promise.should.be.rejected.with( 'Too few Promises were resolved.' )
+			)
+			
+			specify( 'Array of rejected Promise(s) with multiple resolved values requested', ->
+				promise = Deft.Promise.some( [ Deft.Deferred.reject( 'error message' ), Deft.Deferred.reject( 'error message' ), Deft.Deferred.reject( 'error message' ) ], 2 )
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				promise.should.be.rejected.with( 'Too few Promises were resolved.' )
+			)
+		)
+		
+		describe( 'returns a new Promise that rejects with the error associated with the rejected Promise of an Array of Promise(s) or values', ->
+			specify( 'Error: error message', ->
+				promise = Deft.Promise.some( 
+					Deft.Deferred.reject(
+						new Error( 'error message' )
+					)
+					2
+				)
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				promise.should.be.rejected.with( Error, 'error message' )
+			)
+		)
+		
+		describe( 'throws an Error if anything other than Array or Promise of an Array is specified', ->
+			specify( 'no parameters', ->
+				expect( -> Deft.Promise.some() ).to.throw( Error, 'Invalid parameter: expected an Array or Promise of an Array.' )
+			)
+			
+			specify( 'a single non-Array parameter', ->
+				expect( -> Deft.Promise.some( 1 ) ).to.throw( Error, 'Invalid parameter: expected an Array or Promise of an Array.' )
+			)
+			
+			specify( 'multiple non-Array parameters', ->
+				expect( -> Deft.Promise.some( 1, 2, 3 ) ).to.throw( Error, 'Invalid parameter: expected an Array or Promise of an Array.' )
+			)
+			
+			specify( 'a single Array parameter', ->
+				expect( -> Deft.Promise.some( [ 1, 2, 3 ] ) ).to.throw( Error, 'Invalid parameter: expected a positive integer.' )
+			)
+			
+			specify( 'a single Array parameter and a non-numeric value', ->
+				expect( -> Deft.Promise.some( [ 1, 2, 3 ], 'value' ) ).to.throw( Error, 'Invalid parameter: expected a positive integer.' )
+			)
+		)
 	)
 	
 	describe( 'delay()', ->
