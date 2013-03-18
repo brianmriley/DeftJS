@@ -799,7 +799,78 @@ describe('Deft.promise.Promise', function() {
       });
     });
   });
-  describe('memoize()', function() {});
+  describe('memoize()', function() {
+    var fibonacci;
+    fibonacci = function(n) {
+      if (n < 2) {
+        return n;
+      } else {
+        return fibonacci(n - 1) + fibonacci(n - 2);
+      }
+    };
+    describe('should return a new function that wraps the specified function, caching results for previously processed inputs, and returns a Promise that will resolve with the result value', function() {
+      specify('value', function() {
+        var memoFunction, promise, targetFunction;
+        targetFunction = sinon.spy(fibonacci);
+        memoFunction = Deft.Promise.memoize(targetFunction);
+        promise = Deft.Promise.all([memoFunction(12), memoFunction(12)]).then(function(value) {
+          expect(targetFunction).to.be.calledOnce;
+          return value;
+        }, function(error) {
+          throw error;
+        });
+        return promise.should.eventually.deep.equal([fibonacci(12), fibonacci(12)]);
+      });
+      specify('resolved Promise', function() {
+        var memoFunction, promise, targetFunction;
+        targetFunction = sinon.spy(fibonacci);
+        memoFunction = Deft.Promise.memoize(targetFunction);
+        promise = Deft.Promise.all([memoFunction(Deft.Deferred.resolve(12)), memoFunction(Deft.Deferred.resolve(12))]).then(function(value) {
+          expect(targetFunction).to.be.calledOnce;
+          return value;
+        }, function(error) {
+          throw error;
+        });
+        return promise.should.eventually.deep.equal([fibonacci(12), fibonacci(12)]);
+      });
+    });
+    describe('should execute the wrapped function in the optionally specified scope', function() {
+      specify('optional scope omitted', function() {
+        var memoFunction, promise, targetFunction;
+        targetFunction = sinon.spy(fibonacci);
+        memoFunction = Deft.Promise.memoize(targetFunction);
+        promise = memoFunction(12).then(function(value) {
+          expect(targetFunction).to.be.calledOnce.and.calledOn(void 0);
+          return value;
+        }, function(error) {
+          throw error;
+        });
+        return promise.should.eventually.equal(fibonacci(12));
+      });
+      specify('scope specified', function() {
+        var memoFunction, promise, targetFunction, targetScope;
+        targetScope = {};
+        targetFunction = sinon.spy(fibonacci);
+        memoFunction = Deft.Promise.memoize(targetFunction, targetScope);
+        promise = memoFunction(12).then(function(value) {
+          expect(targetFunction).to.be.calledOnce.and.calledOn(targetScope);
+          return value;
+        }, function(error) {
+          throw error;
+        });
+        return promise.should.eventually.equal(fibonacci(12));
+      });
+    });
+    describe('should return a new function that wraps the specified function and returns a Promise that will reject with the associated error when the wrapper function is called with a rejected Promise', function() {
+      specify('rejected Promise', function() {
+        var memoFunction, promise, targetFunction;
+        targetFunction = sinon.spy(fibonacci);
+        memoFunction = Deft.Promise.memoize(targetFunction);
+        promise = memoFunction(Deft.Deferred.reject(new Error('error message')));
+        return promise.should.be.rejected["with"](Error, 'error message');
+      });
+    });
+  });
   describe('map()', function() {});
   return describe('reduce()', function() {});
 });

@@ -1094,6 +1094,101 @@ describe( 'Deft.promise.Promise', ->
 	)
 	
 	describe( 'memoize()', ->
+		fibonacci = ( n ) ->
+			( if n < 2 then n else fibonacci( n - 1 ) + fibonacci( n - 2 ) )
+		
+		describe( 'should return a new function that wraps the specified function, caching results for previously processed inputs, and returns a Promise that will resolve with the result value', ->
+			specify( 'value', ->
+				targetFunction = sinon.spy( fibonacci )
+				
+				memoFunction = Deft.Promise.memoize( targetFunction )
+				promise = Deft.Promise.all( 
+					[
+						memoFunction( 12 )
+						memoFunction( 12 )
+					]
+				).then(
+					( value ) ->
+						expect( targetFunction ).to.be.calledOnce
+						return value
+					( error ) ->
+						throw error
+				)
+				
+				return promise.should.eventually.deep.equal( [ fibonacci( 12 ), fibonacci( 12 ) ] )
+			)
+			
+			specify( 'resolved Promise', ->
+				targetFunction = sinon.spy( fibonacci )
+				
+				memoFunction = Deft.Promise.memoize( targetFunction )
+				promise = Deft.Promise.all(
+					[
+						memoFunction( Deft.Deferred.resolve( 12 ) )
+						memoFunction( Deft.Deferred.resolve( 12 ) )
+					]
+				).then(
+					( value ) ->
+						expect( targetFunction ).to.be.calledOnce
+						return value
+					( error ) ->
+						throw error
+				)
+				
+				return promise.should.eventually.deep.equal( [ fibonacci( 12 ), fibonacci( 12 ) ] )
+			)
+			
+			return
+		)
+		
+		describe( 'should execute the wrapped function in the optionally specified scope', ->
+			specify( 'optional scope omitted', ->
+				targetFunction = sinon.spy( fibonacci )
+				
+				memoFunction = Deft.Promise.memoize( targetFunction )
+				promise = memoFunction( 12 ).then(
+					( value ) ->
+						expect( targetFunction ).to.be.calledOnce.and.calledOn( undefined )
+						return value
+					( error ) ->
+						throw error
+				)
+				
+				return promise.should.eventually.equal( fibonacci( 12 ) )
+			)
+			
+			specify( 'scope specified', ->
+				targetScope = {}
+				targetFunction = sinon.spy( fibonacci )
+				
+				memoFunction = Deft.Promise.memoize( targetFunction, targetScope )
+				promise = memoFunction( 12 ).then(
+					( value ) ->
+						expect( targetFunction ).to.be.calledOnce.and.calledOn( targetScope )
+						return value
+					( error ) ->
+						throw error
+				)
+				
+				return promise.should.eventually.equal( fibonacci( 12 ) )
+			)
+			
+			return
+		)
+		
+		describe( 'should return a new function that wraps the specified function and returns a Promise that will reject with the associated error when the wrapper function is called with a rejected Promise', ->
+			specify( 'rejected Promise', ->
+				targetFunction = sinon.spy( fibonacci )
+				
+				memoFunction = Deft.Promise.memoize( targetFunction )
+				promise = memoFunction( Deft.Deferred.reject( new Error( 'error message' ) ) )
+				
+				return promise.should.be.rejected.with( Error, 'error message' )
+			)
+			
+			return
+		)
+		
 		return
 	)
 	
