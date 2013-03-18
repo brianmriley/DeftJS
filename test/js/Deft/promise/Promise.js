@@ -681,8 +681,27 @@ describe('Deft.promise.Promise', function() {
     now = function() {
       return new Date().getTime();
     };
-    describe('should return a new Promise that resolves with the specified Promise or value after the specfied delay', function() {
-      specify('value with 0 delay', function() {
+    describe('should return a new Promise that resolves after the specified delay', function() {
+      specify('0 ms delay', function() {
+        var promise;
+        promise = Deft.Promise.delay(0);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.equal(void 0);
+      });
+      specify('value with 100 ms delay', function() {
+        var promise, start;
+        promise = Deft.Promise.delay(100);
+        start = now();
+        promise.should.be.an["instanceof"](Deft.Promise);
+        promise = promise.then(function(value) {
+          expect(now() - start).to.be.closeTo(100, 10);
+          return value;
+        });
+        return promise.should.eventually.equal(void 0);
+      });
+    });
+    describe('should return a new Promise that resolves with the specified Promise or value after the specified delay', function() {
+      specify('value with 0 ms delay', function() {
         var promise;
         promise = Deft.Promise.delay('expected value', 0);
         promise.should.be.an["instanceof"](Deft.Promise);
@@ -694,7 +713,7 @@ describe('Deft.promise.Promise', function() {
         promise.should.be.an["instanceof"](Deft.Promise);
         return promise.should.eventually.equal('expected value');
       });
-      specify('value with 100ms delay', function() {
+      specify('value with 100 ms delay', function() {
         var promise, start;
         promise = Deft.Promise.delay('expected value', 100);
         start = now();
@@ -705,7 +724,7 @@ describe('Deft.promise.Promise', function() {
         });
         return promise.should.eventually.equal('expected value');
       });
-      specify('resolved Promise with 100ms delay', function() {
+      specify('resolved Promise with 100 ms delay', function() {
         var promise, start;
         promise = Deft.Promise.delay(Deft.Deferred.resolve('expected value'), 100);
         start = now();
@@ -716,7 +735,7 @@ describe('Deft.promise.Promise', function() {
         });
         return promise.should.eventually.equal('expected value');
       });
-      specify('rejected Promise with 100ms delay', function() {
+      specify('rejected Promise with 100 ms delay', function() {
         var promise, start;
         promise = Deft.Promise.delay(Deft.Deferred.reject(new Error('error message')), 100);
         start = now();

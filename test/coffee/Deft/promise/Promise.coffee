@@ -915,8 +915,33 @@ describe( 'Deft.promise.Promise', ->
 	describe( 'delay()', ->
 		now = -> new Date().getTime()
 		
-		describe( 'should return a new Promise that resolves with the specified Promise or value after the specfied delay', ->
-			specify( 'value with 0 delay', ->
+		describe( 'should return a new Promise that resolves after the specified delay', ->
+			specify( '0 ms delay', ->
+				promise = Deft.Promise.delay( 0 )
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.eventually.equal( undefined )
+			)
+			
+			specify( 'value with 100 ms delay', ->
+				promise = Deft.Promise.delay( 100 )
+				
+				start = now()
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				promise = promise.then(
+					( value ) -> 
+						expect( now() - start ).to.be.closeTo( 100, 10 )
+						return value
+				)
+				return promise.should.eventually.equal( undefined )
+			)
+			
+			return
+		)
+		
+		describe( 'should return a new Promise that resolves with the specified Promise or value after the specified delay', ->
+			specify( 'value with 0 ms delay', ->
 				promise = Deft.Promise.delay( 'expected value', 0 )
 				
 				promise.should.be.an.instanceof( Deft.Promise )
@@ -930,13 +955,13 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.eventually.equal( 'expected value' )
 			)
 			
-			specify( 'value with 100ms delay', ->
+			specify( 'value with 100 ms delay', ->
 				promise = Deft.Promise.delay( 'expected value', 100 )
 				
 				start = now()
 				
 				promise.should.be.an.instanceof( Deft.Promise )
-				promise = promise.then( 
+				promise = promise.then(
 					( value ) -> 
 						expect( now() - start ).to.be.closeTo( 100, 10 )
 						return value
@@ -944,13 +969,13 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.eventually.equal( 'expected value' )
 			)
 			
-			specify( 'resolved Promise with 100ms delay', ->
+			specify( 'resolved Promise with 100 ms delay', ->
 				promise = Deft.Promise.delay( Deft.Deferred.resolve( 'expected value' ), 100 )
 				
 				start = now()
 				
 				promise.should.be.an.instanceof( Deft.Promise )
-				promise = promise.then( 
+				promise = promise.then(
 					( value ) -> 
 						expect( now() - start ).to.be.closeTo( 100, 10 )
 						return value
@@ -958,13 +983,13 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.eventually.equal( 'expected value' )
 			)
 			
-			specify( 'rejected Promise with 100ms delay', ->
+			specify( 'rejected Promise with 100 ms delay', ->
 				promise = Deft.Promise.delay( Deft.Deferred.reject( new Error( 'error message' ) ), 100 )
 				
 				start = now()
 				
 				promise.should.be.an.instanceof( Deft.Promise )
-				promise = promise.then( 
+				promise = promise.then(
 					( value ) ->
 						return value
 					( error ) ->
