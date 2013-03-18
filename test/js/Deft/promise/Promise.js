@@ -225,13 +225,13 @@ describe('Deft.promise.Promise', function() {
         promise.should.be.an["instanceof"](Deft.Promise);
         return promise.should.eventually.deep.equal([,2,,4,5]);
       });
-      specify('Array with one resolved Promise(s)', function() {
+      specify('Array with one resolved Promise', function() {
         var promise;
         promise = Deft.Promise.all([Deft.Deferred.resolve('expected value')]);
         promise.should.be.an["instanceof"](Deft.Promise);
         return promise.should.eventually.deep.equal(['expected value']);
       });
-      specify('Array of resolved Promise(s)', function() {
+      specify('Array of resolved Promises', function() {
         var promise;
         promise = Deft.Promise.all([Deft.Deferred.resolve(1), Deft.Deferred.resolve(2), Deft.Deferred.resolve(3)]);
         promise.should.be.an["instanceof"](Deft.Promise);
@@ -263,20 +263,20 @@ describe('Deft.promise.Promise', function() {
         promise.should.be.an["instanceof"](Deft.Promise);
         return promise.should.eventually.deep.equal([,2,,4,5]);
       });
-      specify('Promise of an Array with one resolved Promise(s)', function() {
+      specify('Promise of an Array with one resolved Promise', function() {
         var promise;
         promise = Deft.Promise.all(Deft.Deferred.resolve([Deft.Deferred.resolve('expected value')]));
         promise.should.be.an["instanceof"](Deft.Promise);
         return promise.should.eventually.deep.equal(['expected value']);
       });
-      specify('Promise of an Array of resolved Promise(s)', function() {
+      specify('Promise of an Array of resolved Promises', function() {
         var promise;
         promise = Deft.Promise.all(Deft.Deferred.resolve([Deft.Deferred.resolve(1), Deft.Deferred.resolve(2), Deft.Deferred.resolve(3)]));
         promise.should.be.an["instanceof"](Deft.Promise);
         return promise.should.eventually.deep.equal([1, 2, 3]);
       });
     });
-    describe('returns a new Promise that will reject with the error associated with the first Promise in the specified Array of Promise(s) or values that rejects', function() {
+    describe('returns a new Promise that will reject with the error associated with the first Promise in the specified Array of Promise(s) or value(s) that rejects', function() {
       specify('Array with one rejected Promise', function() {
         var promise;
         promise = Deft.Promise.all([Deft.Deferred.reject(new Error('error message'))]);
@@ -289,14 +289,14 @@ describe('Deft.promise.Promise', function() {
         promise.should.be.an["instanceof"](Deft.Promise);
         return promise.should.be.rejected["with"](Error, 'error message');
       });
-      specify('Array of values, resolved Promises and a rejected Promise', function() {
+      specify('Array of values, pending and resolved Promises and a rejected Promise', function() {
         var promise;
-        promise = Deft.Promise.all([1, Deft.Deferred.reject(new Error('error message')), Deft.Deferred.resolve(3)]);
+        promise = Deft.Promise.all([1, 2, Deft.Deferred.reject(new Error('error message')), Deft.Deferred.resolve(4), Ext.create('Deft.Deferred').promise]);
         promise.should.be.an["instanceof"](Deft.Promise);
         return promise.should.be.rejected["with"](Error, 'error message');
       });
     });
-    describe('returns a new Promise that will reject with the error associated with the first Promise in the specified resolved Promise of an Array of Promise(s) or values that rejects', function() {
+    describe('returns a new Promise that will reject with the error associated with the first Promise in the specified resolved Promise of an Array of Promise(s) or value(s) that rejects', function() {
       specify('Promise of an Array with one rejected Promise', function() {
         var promise;
         promise = Deft.Promise.all(Deft.Deferred.resolve([Deft.Deferred.reject(new Error('error message'))]));
@@ -309,14 +309,14 @@ describe('Deft.promise.Promise', function() {
         promise.should.be.an["instanceof"](Deft.Promise);
         return promise.should.be.rejected["with"](Error, 'error message');
       });
-      specify('Promise of an Array of values, resolved Promises and a rejected Promise', function() {
+      specify('Promise of an Array of values, pending and resolved Promises and a rejected Promise', function() {
         var promise;
-        promise = Deft.Promise.all(Deft.Deferred.resolve([1, Deft.Deferred.reject(new Error('error message')), Deft.Deferred.resolve(3)]));
+        promise = Deft.Promise.all(Deft.Deferred.resolve([1, 2, Deft.Deferred.reject(new Error('error message')), Deft.Deferred.resolve(4), Ext.create('Deft.Deferred').promise]));
         promise.should.be.an["instanceof"](Deft.Promise);
         return promise.should.be.rejected["with"](Error, 'error message');
       });
     });
-    describe('returns a new Promise that will reject with the error associated with the rejected Promise of an Array of Promise(s) or values', function() {
+    describe('returns a new Promise that will reject with the error associated with the rejected Promise of an Array of Promise(s) or value(s)', function() {
       specify('Error: error message', function() {
         var promise;
         promise = Deft.Promise.all(Deft.Deferred.reject(new Error('error message')));
@@ -362,31 +362,31 @@ describe('Deft.promise.Promise', function() {
         promise.should.be.an["instanceof"](Deft.Promise);
         return promise.should.eventually.be.a.memberOf([2, 4, 5]);
       });
-      specify('Array with one resolved Promise(s)', function() {
+      specify('Array with one resolved Promise', function() {
         var promise;
         promise = Deft.Promise.any([Deft.Deferred.resolve('expected value')]);
         promise.should.be.an["instanceof"](Deft.Promise);
         return promise.should.eventually.equal('expected value');
       });
-      specify('Array of resolved Promise(s)', function() {
+      specify('Array of resolved Promises', function() {
         var promise;
         promise = Deft.Promise.any([Deft.Deferred.resolve(1), Deft.Deferred.resolve(2), Deft.Deferred.resolve(3)]);
         promise.should.be.an["instanceof"](Deft.Promise);
         return promise.should.eventually.be.a.memberOf([1, 2, 3]);
       });
-      specify('Array of rejected Promise(s) and one resolved Promise', function() {
+      specify('Array of rejected Promises and one resolved Promise', function() {
         var promise;
         promise = Deft.Promise.any([Deft.Deferred.reject('error message'), Deft.Deferred.resolve('expected value'), Deft.Deferred.reject('error message')]);
         promise.should.be.an["instanceof"](Deft.Promise);
         return promise.should.eventually.equal('expected value');
       });
-      specify('Array of pending and rejected Promise(s) and one resolved Promise', function() {
+      specify('Array of pending and rejected Promises and one resolved Promise', function() {
         var promise;
         promise = Deft.Promise.any([Ext.create('Deft.Deferred').promise, Deft.Deferred.resolve('expected value'), Deft.Deferred.reject('error message')]);
         promise.should.be.an["instanceof"](Deft.Promise);
         return promise.should.eventually.equal('expected value');
       });
-      specify('Array of pending and rejected Promise(s) and multiple resolved Promises', function() {
+      specify('Array of pending and rejected Promises and multiple resolved Promises', function() {
         var promise;
         promise = Deft.Promise.any([Ext.create('Deft.Deferred').promise, Deft.Deferred.resolve(1), Deft.Deferred.reject('error message'), Deft.Deferred.resolve(2)]);
         promise.should.be.an["instanceof"](Deft.Promise);
@@ -412,31 +412,31 @@ describe('Deft.promise.Promise', function() {
         promise.should.be.an["instanceof"](Deft.Promise);
         return promise.should.eventually.be.a.memberOf([2, 4, 5]);
       });
-      specify('Promise of an Array with one resolved Promise(s)', function() {
+      specify('Promise of an Array with one resolved Promise', function() {
         var promise;
         promise = Deft.Promise.any(Deft.Deferred.resolve([Deft.Deferred.resolve('expected value')]));
         promise.should.be.an["instanceof"](Deft.Promise);
         return promise.should.eventually.equal('expected value');
       });
-      specify('Promise of an Array of resolved Promise(s)', function() {
+      specify('Promise of an Array of resolved Promise', function() {
         var promise;
         promise = Deft.Promise.any(Deft.Deferred.resolve([Deft.Deferred.resolve(1), Deft.Deferred.resolve(2), Deft.Deferred.resolve(3)]));
         promise.should.be.an["instanceof"](Deft.Promise);
         return promise.should.eventually.to.be.a.memberOf([1, 2, 3]);
       });
-      specify('Promise of an Array of rejected Promise(s) and one resolved Promise', function() {
+      specify('Promise of an Array of rejected Promises and one resolved Promise', function() {
         var promise;
         promise = Deft.Promise.any(Deft.Deferred.resolve([Deft.Deferred.reject('error message'), Deft.Deferred.resolve('expected value'), Deft.Deferred.reject('error message')]));
         promise.should.be.an["instanceof"](Deft.Promise);
         return promise.should.eventually.equal('expected value');
       });
-      specify('Promise of an Array of pending and rejected Promise(s) and one resolved Promise', function() {
+      specify('Promise of an Array of pending and rejected Promises and one resolved Promise', function() {
         var promise;
         promise = Deft.Promise.any(Deft.Deferred.resolve([Ext.create('Deft.Deferred').promise, Deft.Deferred.resolve('expected value'), Deft.Deferred.reject('error message')]));
         promise.should.be.an["instanceof"](Deft.Promise);
         return promise.should.eventually.equal('expected value');
       });
-      specify('Promise of an Array of pending and rejected Promise(s) and multiple resolved Promises', function() {
+      specify('Promise of an Array of pending and rejected Promises and multiple resolved Promises', function() {
         var promise;
         promise = Deft.Promise.any(Deft.Deferred.resolve([Ext.create('Deft.Deferred').promise, Deft.Deferred.resolve(1), Deft.Deferred.reject('error message'), Deft.Deferred.resolve(2)]));
         promise.should.be.an["instanceof"](Deft.Promise);
@@ -450,20 +450,20 @@ describe('Deft.promise.Promise', function() {
         promise.should.be.an["instanceof"](Deft.Promise);
         return promise.should.be.rejected["with"](Error, 'No Promises were resolved.');
       });
-      specify('Array with one rejected Promise(s)', function() {
+      specify('Array with one rejected Promise', function() {
         var promise;
         promise = Deft.Promise.any([Deft.Deferred.reject('error message')]);
         promise.should.be.an["instanceof"](Deft.Promise);
         return promise.should.be.rejected["with"](Error, 'No Promises were resolved.');
       });
-      specify('Array of rejected Promise(s)', function() {
+      specify('Array of rejected Promises', function() {
         var promise;
         promise = Deft.Promise.any([Deft.Deferred.reject('error message'), Deft.Deferred.reject('error message'), Deft.Deferred.reject('error message')]);
         promise.should.be.an["instanceof"](Deft.Promise);
         return promise.should.be.rejected["with"](Error, 'No Promises were resolved.');
       });
     });
-    describe('returns a new Promise that will reject with the error associated with the rejected Promise of an Array of Promise(s) or values', function() {
+    describe('returns a new Promise that will reject with the error associated with the rejected Promise of an Array of Promise(s) or value(s)', function() {
       specify('Error: error message', function() {
         var promise;
         promise = Deft.Promise.any(Deft.Deferred.reject(new Error('error message')));
@@ -509,37 +509,37 @@ describe('Deft.promise.Promise', function() {
         promise.should.be.an["instanceof"](Deft.Promise);
         return promise.should.eventually.have.a.lengthOf(2).and.be.membersOf([2, 4, 5]);
       });
-      specify('Array with one resolved Promise(s)', function() {
+      specify('Array with one resolved Promise', function() {
         var promise;
         promise = Deft.Promise.some([Deft.Deferred.resolve('expected value')], 1);
         promise.should.be.an["instanceof"](Deft.Promise);
         return promise.should.eventually.deep.equal(['expected value']);
       });
-      specify('Array of resolved Promise(s)', function() {
+      specify('Array of resolved Promises', function() {
         var promise;
         promise = Deft.Promise.some([Deft.Deferred.resolve(1), Deft.Deferred.resolve(2), Deft.Deferred.resolve(3)], 2);
         promise.should.be.an["instanceof"](Deft.Promise);
         return promise.should.eventually.have.a.lengthOf(2).and.be.membersOf([1, 2, 3]);
       });
-      specify('Array of rejected Promise(s) and one resolved Promise', function() {
+      specify('Array of rejected Promises and one resolved Promise', function() {
         var promise;
         promise = Deft.Promise.some([Deft.Deferred.reject('error message'), Deft.Deferred.resolve('expected value'), Deft.Deferred.reject('error message')], 1);
         promise.should.be.an["instanceof"](Deft.Promise);
         return promise.should.eventually.deep.equal(['expected value']);
       });
-      specify('Array of pending and rejected Promise(s) and one resolved Promise', function() {
+      specify('Array of pending and rejected Promises and one resolved Promise', function() {
         var promise;
         promise = Deft.Promise.some([Ext.create('Deft.Deferred').promise, Deft.Deferred.resolve('expected value'), Deft.Deferred.reject('error message')], 1);
         promise.should.be.an["instanceof"](Deft.Promise);
         return promise.should.eventually.deep.equal(['expected value']);
       });
-      specify('Array of rejected Promise(s) and multiple resolved Promises', function() {
+      specify('Array of rejected Promises and multiple resolved Promises', function() {
         var promise;
         promise = Deft.Promise.some([Deft.Deferred.reject('error message'), Deft.Deferred.resolve(1), Deft.Deferred.reject('error message'), Deft.Deferred.resolve(2)], 2);
         promise.should.be.an["instanceof"](Deft.Promise);
         return promise.should.eventually.have.a.lengthOf(2).and.be.membersOf([1, 2]);
       });
-      specify('Array of pending and rejected Promise(s) and multiple resolved Promises', function() {
+      specify('Array of pending and rejected Promises and multiple resolved Promises', function() {
         var promise;
         promise = Deft.Promise.some([Ext.create('Deft.Deferred').promise, Deft.Deferred.resolve(1), Deft.Deferred.reject('error message'), Deft.Deferred.resolve(2)], 2);
         promise.should.be.an["instanceof"](Deft.Promise);
@@ -565,37 +565,37 @@ describe('Deft.promise.Promise', function() {
         promise.should.be.an["instanceof"](Deft.Promise);
         return promise.should.eventually.have.a.lengthOf(2).and.be.membersOf([2, 4, 5]);
       });
-      specify('Promise of an Array with one resolved Promise(s)', function() {
+      specify('Promise of an Array with one resolved Promise', function() {
         var promise;
         promise = Deft.Promise.some(Deft.Promise.when([Deft.Deferred.resolve('expected value')]), 1);
         promise.should.be.an["instanceof"](Deft.Promise);
         return promise.should.eventually.deep.equal(['expected value']);
       });
-      specify('Promise of an Array of resolved Promise(s)', function() {
+      specify('Promise of an Array of resolved Promises', function() {
         var promise;
         promise = Deft.Promise.some(Deft.Promise.when([Deft.Deferred.resolve(1), Deft.Deferred.resolve(2), Deft.Deferred.resolve(3)]), 2);
         promise.should.be.an["instanceof"](Deft.Promise);
         return promise.should.eventually.have.a.lengthOf(2).and.be.membersOf([1, 2, 3]);
       });
-      specify('Promise of an Array of rejected Promise(s) and one resolved Promise', function() {
+      specify('Promise of an Array of rejected Promises and one resolved Promise', function() {
         var promise;
         promise = Deft.Promise.some(Deft.Promise.when([Deft.Deferred.reject('error message'), Deft.Deferred.resolve('expected value'), Deft.Deferred.reject('error message')]), 1);
         promise.should.be.an["instanceof"](Deft.Promise);
         return promise.should.eventually.deep.equal(['expected value']);
       });
-      specify('Promise of an Array of pending and rejected Promise(s) and one resolved Promise', function() {
+      specify('Promise of an Array of pending and rejected Promises and one resolved Promise', function() {
         var promise;
         promise = Deft.Promise.some(Deft.Promise.when([Ext.create('Deft.Deferred').promise, Deft.Deferred.resolve('expected value'), Deft.Deferred.reject('error message')]), 1);
         promise.should.be.an["instanceof"](Deft.Promise);
         return promise.should.eventually.deep.equal(['expected value']);
       });
-      specify('Promise of an Array of rejected Promise(s) and multiple resolved Promises', function() {
+      specify('Promise of an Array of rejected Promises and multiple resolved Promises', function() {
         var promise;
         promise = Deft.Promise.some(Deft.Promise.when([Deft.Deferred.reject('error message'), Deft.Deferred.resolve(1), Deft.Deferred.reject('error message'), Deft.Deferred.resolve(2)]), 2);
         promise.should.be.an["instanceof"](Deft.Promise);
         return promise.should.eventually.have.a.lengthOf(2).and.be.membersOf([1, 2]);
       });
-      specify('Promise of an Array of pending and rejected Promise(s) and multiple resolved Promises', function() {
+      specify('Promise of an Array of pending and rejected Promises and multiple resolved Promises', function() {
         var promise;
         promise = Deft.Promise.some(Deft.Promise.when([Ext.create('Deft.Deferred').promise, Deft.Deferred.resolve(1), Deft.Deferred.reject('error message'), Deft.Deferred.resolve(2)]), 2);
         promise.should.be.an["instanceof"](Deft.Promise);
@@ -615,32 +615,32 @@ describe('Deft.promise.Promise', function() {
         promise.should.be.an["instanceof"](Deft.Promise);
         return promise.should.be.rejected["with"](Error, 'Too few Promises were resolved.');
       });
-      specify('Array with one rejected Promise(s) with one resolved value requested', function() {
+      specify('Array with one rejected Promise with one resolved value requested', function() {
         var promise;
         promise = Deft.Promise.some([Deft.Deferred.reject('error message')], 1);
         promise.should.be.an["instanceof"](Deft.Promise);
         return promise.should.be.rejected["with"](Error, 'Too few Promises were resolved.');
       });
-      specify('Array with one rejected Promise(s) with multiple resolved values requested', function() {
+      specify('Array with one rejected Promise with multiple resolved values requested', function() {
         var promise;
         promise = Deft.Promise.some([Deft.Deferred.reject('error message')], 2);
         promise.should.be.an["instanceof"](Deft.Promise);
         return promise.should.be.rejected["with"](Error, 'Too few Promises were resolved.');
       });
-      specify('Array of rejected Promise(s) with one resolved value requested', function() {
+      specify('Array of rejected Promises with one resolved value requested', function() {
         var promise;
         promise = Deft.Promise.some([Deft.Deferred.reject('error message'), Deft.Deferred.reject('error message'), Deft.Deferred.reject('error message')], 1);
         promise.should.be.an["instanceof"](Deft.Promise);
         return promise.should.be.rejected["with"](Error, 'Too few Promises were resolved.');
       });
-      specify('Array of rejected Promise(s) with multiple resolved values requested', function() {
+      specify('Array of rejected Promises with multiple resolved values requested', function() {
         var promise;
         promise = Deft.Promise.some([Deft.Deferred.reject('error message'), Deft.Deferred.reject('error message'), Deft.Deferred.reject('error message')], 2);
         promise.should.be.an["instanceof"](Deft.Promise);
         return promise.should.be.rejected["with"](Error, 'Too few Promises were resolved.');
       });
     });
-    describe('returns a new Promise that will reject with the error associated with the rejected Promise of an Array of Promise(s) or values', function() {
+    describe('returns a new Promise that will reject with the error associated with the rejected Promise of an Array of Promise(s) or value(s)', function() {
       specify('Error: error message', function() {
         var promise;
         promise = Deft.Promise.some(Deft.Deferred.reject(new Error('error message')), 2);
@@ -871,6 +871,317 @@ describe('Deft.promise.Promise', function() {
       });
     });
   });
-  describe('map()', function() {});
+  describe('map()', function() {
+    var doubleFunction, doublePromiseFunction, rejectFunction;
+    doubleFunction = function(value) {
+      return value * 2;
+    };
+    doublePromiseFunction = function(value) {
+      return Deft.Deferred.resolve(value * 2);
+    };
+    rejectFunction = function(value) {
+      return Deft.Deferred.reject(new Error('error message'));
+    };
+    describe('returns a new Promise that will resolve with an Array of the mapped values for the specified Array of Promise(s) or value(s)', function() {
+      specify('Empty Array', function() {
+        var promise;
+        promise = Deft.Promise.map([], doubleFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.deep.equal([]);
+      });
+      specify('Array with one value', function() {
+        var promise;
+        promise = Deft.Promise.map([1], doubleFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.deep.equal([2]);
+      });
+      specify('Array of values', function() {
+        var promise;
+        promise = Deft.Promise.map([1, 2, 3], doubleFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.deep.equal([2, 4, 6]);
+      });
+      specify('Sparse Array', function() {
+        var promise;
+        promise = Deft.Promise.map([,2,,4,5], doubleFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.deep.equal([,4,,8,10]);
+      });
+      specify('Array with one resolved Promise', function() {
+        var promise;
+        promise = Deft.Promise.map([Deft.Deferred.resolve(1)], doubleFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.deep.equal([2]);
+      });
+      specify('Array of resolved Promises', function() {
+        var promise;
+        promise = Deft.Promise.map([Deft.Deferred.resolve(1), Deft.Deferred.resolve(2), Deft.Deferred.resolve(3)], doubleFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.deep.equal([2, 4, 6]);
+      });
+      specify('Array of values and resolved Promises', function() {
+        var promise;
+        promise = Deft.Promise.map([1, Deft.Deferred.resolve(2), Deft.Deferred.resolve(3), 4], doubleFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.deep.equal([2, 4, 6, 8]);
+      });
+    });
+    describe('returns a new Promise that will resolve with an Array of the mapped values for the specified resolved Promise of an Array of Promise(s) or value(s)', function() {
+      specify('Empty Array', function() {
+        var promise;
+        promise = Deft.Promise.map(Deft.Deferred.resolve([]), doubleFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.deep.equal([]);
+      });
+      specify('Array with one value', function() {
+        var promise;
+        promise = Deft.Promise.map(Deft.Deferred.resolve([1]), doubleFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.deep.equal([2]);
+      });
+      specify('Array of values', function() {
+        var promise;
+        promise = Deft.Promise.map(Deft.Deferred.resolve([1, 2, 3]), doubleFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.deep.equal([2, 4, 6]);
+      });
+      specify('Sparse Array', function() {
+        var promise;
+        promise = Deft.Promise.map(Deft.Deferred.resolve([,2,,4,5]), doubleFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.deep.equal([,4,,8,10]);
+      });
+      specify('Array with one resolved Promise', function() {
+        var promise;
+        promise = Deft.Promise.map(Deft.Deferred.resolve([Deft.Deferred.resolve(1)]), doubleFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.deep.equal([2]);
+      });
+      specify('Array of resolved Promises', function() {
+        var promise;
+        promise = Deft.Promise.map(Deft.Deferred.resolve([Deft.Deferred.resolve(1), Deft.Deferred.resolve(2), Deft.Deferred.resolve(3)]), doubleFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.deep.equal([2, 4, 6]);
+      });
+      specify('Array of values and resolved Promises', function() {
+        var promise;
+        promise = Deft.Promise.map(Deft.Deferred.resolve([1, Deft.Deferred.resolve(2), Deft.Deferred.resolve(3), 4]), doubleFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.deep.equal([2, 4, 6, 8]);
+      });
+    });
+    describe('returns a new Promise that will resolve with an Array of the resolved mapped Promises values for the specified Array of Promise(s) or value(s)', function() {
+      specify('Empty Array', function() {
+        var promise;
+        promise = Deft.Promise.map([], doublePromiseFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.deep.equal([]);
+      });
+      specify('Array with one value', function() {
+        var promise;
+        promise = Deft.Promise.map([1], doublePromiseFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.deep.equal([2]);
+      });
+      specify('Array of values', function() {
+        var promise;
+        promise = Deft.Promise.map([1, 2, 3], doublePromiseFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.deep.equal([2, 4, 6]);
+      });
+      specify('Sparse Array', function() {
+        var promise;
+        promise = Deft.Promise.map([,2,,4,5], doublePromiseFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.deep.equal([,4,,8,10]);
+      });
+      specify('Array with one resolved Promise', function() {
+        var promise;
+        promise = Deft.Promise.map([Deft.Deferred.resolve(1)], doublePromiseFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.deep.equal([2]);
+      });
+      specify('Array of resolved Promises', function() {
+        var promise;
+        promise = Deft.Promise.map([Deft.Deferred.resolve(1), Deft.Deferred.resolve(2), Deft.Deferred.resolve(3)], doublePromiseFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.deep.equal([2, 4, 6]);
+      });
+      specify('Array of values and resolved Promises', function() {
+        var promise;
+        promise = Deft.Promise.map([1, Deft.Deferred.resolve(2), Deft.Deferred.resolve(3), 4], doublePromiseFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.deep.equal([2, 4, 6, 8]);
+      });
+    });
+    describe('returns a new Promise that will resolve with an Array of the resolved mapped Promises values for the specified resolved Promise of an Array of Promise(s) or value(s)', function() {
+      specify('Empty Array', function() {
+        var promise;
+        promise = Deft.Promise.map(Deft.Deferred.resolve([]), doublePromiseFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.deep.equal([]);
+      });
+      specify('Array with one value', function() {
+        var promise;
+        promise = Deft.Promise.map(Deft.Deferred.resolve([1]), doublePromiseFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.deep.equal([2]);
+      });
+      specify('Array of values', function() {
+        var promise;
+        promise = Deft.Promise.map(Deft.Deferred.resolve([1, 2, 3]), doublePromiseFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.deep.equal([2, 4, 6]);
+      });
+      specify('Sparse Array', function() {
+        var promise;
+        promise = Deft.Promise.map(Deft.Deferred.resolve([,2,,4,5]), doublePromiseFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.deep.equal([,4,,8,10]);
+      });
+      specify('Array with one resolved Promise', function() {
+        var promise;
+        promise = Deft.Promise.map(Deft.Deferred.resolve([Deft.Deferred.resolve(1)]), doublePromiseFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.deep.equal([2]);
+      });
+      specify('Array of resolved Promises', function() {
+        var promise;
+        promise = Deft.Promise.map(Deft.Deferred.resolve([Deft.Deferred.resolve(1), Deft.Deferred.resolve(2), Deft.Deferred.resolve(3)]), doublePromiseFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.deep.equal([2, 4, 6]);
+      });
+      specify('Array of values and resolved Promises', function() {
+        var promise;
+        promise = Deft.Promise.map(Deft.Deferred.resolve([1, Deft.Deferred.resolve(2), Deft.Deferred.resolve(3), 4]), doublePromiseFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.deep.equal([2, 4, 6, 8]);
+      });
+    });
+    describe('returns a new Promise that will reject with the error associated with the first Promise in the specified Array of Promise(s) or value(s) that rejects', function() {
+      specify('Array with one rejected Promise', function() {
+        var promise;
+        promise = Deft.Promise.map([Deft.Deferred.reject(new Error('error message'))], doubleFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.be.rejected["with"](Error, 'error message');
+      });
+      specify('Array with resolved Promises and a rejected Promise', function() {
+        var promise;
+        promise = Deft.Promise.map([Deft.Deferred.resolve(1), Deft.Deferred.reject(new Error('error message')), Deft.Deferred.resolve(3)], doubleFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.be.rejected["with"](Error, 'error message');
+      });
+      specify('Array of values, pending and resolved Promises and a rejected Promise', function() {
+        var promise;
+        promise = Deft.Promise.map([1, 2, Deft.Deferred.reject(new Error('error message')), Deft.Deferred.resolve(4), Ext.create('Deft.Deferred').promise], doubleFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.be.rejected["with"](Error, 'error message');
+      });
+    });
+    describe('returns a new Promise that will reject with the error associated with the first Promise in the specified resolved Promise of an Array of Promise(s) or value(s) that rejects', function() {
+      specify('Array with one rejected Promise', function() {
+        var promise;
+        promise = Deft.Promise.map(Deft.Deferred.resolve([Deft.Deferred.reject(new Error('error message'))]), doubleFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.be.rejected["with"](Error, 'error message');
+      });
+      specify('Array with resolved Promises and a rejected Promise', function() {
+        var promise;
+        promise = Deft.Promise.map(Deft.Deferred.resolve([Deft.Deferred.resolve(1), Deft.Deferred.reject(new Error('error message')), Deft.Deferred.resolve(3)]), doubleFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.be.rejected["with"](Error, 'error message');
+      });
+      specify('Array of values, pending and resolved Promises and a rejected Promise', function() {
+        var promise;
+        promise = Deft.Promise.map(Deft.Deferred.resolve([1, 2, Deft.Deferred.reject(new Error('error message')), Deft.Deferred.resolve(4), Ext.create('Deft.Deferred').promise]), doubleFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.be.rejected["with"](Error, 'error message');
+      });
+    });
+    describe('returns a new Promise that will reject with the error associated with the first mapped Promise value in the specified Array of Promise(s) or value(s) that rejects', function() {
+      specify('Array with one value', function() {
+        var promise;
+        promise = Deft.Promise.map([1], rejectFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.be.rejected["with"](Error, 'error message');
+      });
+      specify('Array of values', function() {
+        var promise;
+        promise = Deft.Promise.map([1, 2, 3], rejectFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.be.rejected["with"](Error, 'error message');
+      });
+      specify('Sparse Array', function() {
+        var promise;
+        promise = Deft.Promise.map([,2,,4,5], rejectFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.be.rejected["with"](Error, 'error message');
+      });
+      specify('Array with one resolved Promise', function() {
+        var promise;
+        promise = Deft.Promise.map([Deft.Deferred.resolve(1)], rejectFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.be.rejected["with"](Error, 'error message');
+      });
+      specify('Array of resolved Promises', function() {
+        var promise;
+        promise = Deft.Promise.map([Deft.Deferred.resolve(1), Deft.Deferred.resolve(2), Deft.Deferred.resolve(3)], rejectFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.be.rejected["with"](Error, 'error message');
+      });
+      specify('Array of values and resolved Promises', function() {
+        var promise;
+        promise = Deft.Promise.map([1, Deft.Deferred.resolve(2), Deft.Deferred.resolve(3), 4], rejectFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.be.rejected["with"](Error, 'error message');
+      });
+    });
+    describe('returns a new Promise that will reject with the error associated with the first mapped Promise value in the specified resolved Promise of an Array of Promise(s) or value(s) that rejects', function() {
+      specify('Array with one value', function() {
+        var promise;
+        promise = Deft.Promise.map(Deft.Deferred.resolve([1]), rejectFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.be.rejected["with"](Error, 'error message');
+      });
+      specify('Array of values', function() {
+        var promise;
+        promise = Deft.Promise.map(Deft.Deferred.resolve([1, 2, 3]), rejectFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.be.rejected["with"](Error, 'error message');
+      });
+      specify('Sparse Array', function() {
+        var promise;
+        promise = Deft.Promise.map(Deft.Deferred.resolve([,2,,4,5]), rejectFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.be.rejected["with"](Error, 'error message');
+      });
+      specify('Array with one resolved Promise', function() {
+        var promise;
+        promise = Deft.Promise.map(Deft.Deferred.resolve([Deft.Deferred.resolve(1)]), rejectFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.be.rejected["with"](Error, 'error message');
+      });
+      specify('Array of resolved Promises', function() {
+        var promise;
+        promise = Deft.Promise.map(Deft.Deferred.resolve([Deft.Deferred.resolve(1), Deft.Deferred.resolve(2), Deft.Deferred.resolve(3)]), rejectFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.be.rejected["with"](Error, 'error message');
+      });
+      specify('Array of values and resolved Promises', function() {
+        var promise;
+        promise = Deft.Promise.map(Deft.Deferred.resolve([1, Deft.Deferred.resolve(2), Deft.Deferred.resolve(3), 4]), rejectFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.be.rejected["with"](Error, 'error message');
+      });
+    });
+    describe('returns a new Promise that will reject with the error associated with the rejected Promise of an Array of Promise(s) or value(s)', function() {
+      specify('Error: error message', function() {
+        var promise;
+        promise = Deft.Promise.map(Deft.Deferred.reject(new Error('error message')));
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.be.rejected["with"](Error, 'error message');
+      });
+    });
+  });
   return describe('reduce()', function() {});
 });
