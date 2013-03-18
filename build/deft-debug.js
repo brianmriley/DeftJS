@@ -2079,6 +2079,11 @@ Ext.define('Deft.promise.Promise', {
 
     delay: function(promiseOrValue, milliseconds) {
       var deferred;
+      if (arguments.length === 1) {
+        milliseconds = promiseOrValue;
+        promiseOrValue = void 0;
+      }
+      milliseconds = Math.max(milliseconds, 0);
       deferred = Ext.create('Deft.promise.Deferred');
       setTimeout(function() {
         deferred.resolve(promiseOrValue);
