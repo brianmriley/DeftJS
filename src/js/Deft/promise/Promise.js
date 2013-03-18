@@ -171,14 +171,14 @@ Ext.define('Deft.promise.Promise', {
       deferred = Ext.create('Deft.promise.Deferred');
       timeoutId = setTimeout(function() {
         if (timeoutId) {
-          return deferred.reject(new Error('Promise timed out.'));
+          deferred.reject(new Error('Promise timed out.'));
         }
-      });
+      }, milliseconds);
       cancelTimeout = function() {
         clearTimeout(timeoutId);
         return timeoutId = null;
       };
-      Deft.Promise.when(promise).then(function(value) {
+      Deft.Promise.when(promiseOrValue).then(function(value) {
         cancelTimeout();
         deferred.resolve(value);
       }, function(reason) {

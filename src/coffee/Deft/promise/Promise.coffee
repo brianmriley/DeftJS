@@ -150,16 +150,19 @@ Ext.define( 'Deft.promise.Promise',
 		###
 		timeout: ( promiseOrValue, milliseconds ) ->
 			deferred = Ext.create( 'Deft.promise.Deferred' )
-			timeoutId = setTimeout( ->
-				if timeoutId
-					deferred.reject( new Error( 'Promise timed out.' ) )
+			timeoutId = setTimeout( 
+				->
+					if timeoutId
+						deferred.reject( new Error( 'Promise timed out.' ) )
+					return
+				milliseconds
 			)
 			
 			cancelTimeout = ->
 				clearTimeout( timeoutId )
 				timeoutId = null
 			
-			Deft.Promise.when( promise ).then(
+			Deft.Promise.when( promiseOrValue ).then(
 				( value ) ->
 					cancelTimeout()
 					deferred.resolve( value )
