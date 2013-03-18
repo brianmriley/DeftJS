@@ -221,7 +221,9 @@ Ext.define('Deft.promise.Promise', {
           deferred.resolve(results);
         } else {
           resolve = function(item, index) {
-            return Deft.Promise.when(item, mapFn).then(function(value) {
+            return Deft.Promise.when(item).then(function(value) {
+              return mapFn(value, index, results);
+            }).then(function(value) {
               results[index] = value;
               if (!--remainingToResolve) {
                 deferred.resolve(results);

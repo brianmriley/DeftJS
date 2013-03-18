@@ -207,14 +207,19 @@ Ext.define( 'Deft.promise.Promise',
 						deferred.resolve( results )
 					else
 						resolve = ( item, index ) ->
-							Deft.Promise.when( item, mapFn ).then(
-								( value ) ->
-									results[ index ] = value
-									if not --remainingToResolve
-										deferred.resolve( results )
-									return value
-								deferred.reject
-							)
+							Deft.Promise.when( item )
+								.then(
+									( value ) ->
+										return mapFn( value, index, results )
+								)
+								.then(
+									( value ) ->
+										results[ index ] = value
+										if not --remainingToResolve
+											deferred.resolve( results )
+										return value
+									deferred.reject
+								)
 						
 						for promiseOrValue, index in promisesOrValues
 							if index of promisesOrValues
