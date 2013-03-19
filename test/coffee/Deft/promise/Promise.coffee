@@ -1308,19 +1308,19 @@ describe( 'Deft.promise.Promise', ->
 			expect( arguments ).to.have.lengthOf( 3 )
 			expect( array ).to.be.instanceof( Array )
 			expect( index ).to.be.at.least( 0 ).and.lessThan( array.length )
-			value * 2
+			return value * 2
 		
 		doublePromiseFunction = ( value, index, array ) -> 
 			expect( arguments ).to.have.lengthOf( 3 )
 			expect( array ).to.be.instanceof( Array )
 			expect( index ).to.be.at.least( 0 ).and.lessThan( array.length )
-			Deft.Deferred.resolve( value * 2 )
+			return Deft.Deferred.resolve( value * 2 )
 		
 		rejectFunction = ( value, index, array ) -> 
 			expect( arguments ).to.have.lengthOf( 3 )
 			expect( array ).to.be.instanceof( Array )
 			expect( index ).to.be.at.least( 0 ).and.lessThan( array.length )
-			Deft.Deferred.reject( new Error( 'error message' ) )
+			return Deft.Deferred.reject( new Error( 'error message' ) )
 		
 		describe( 'returns a new Promise that will resolve with an Array of the mapped values for the specified Array of Promise(s) or value(s)', ->
 			specify( 'Empty Array', ->
@@ -1832,13 +1832,19 @@ describe( 'Deft.promise.Promise', ->
 			expect( arguments ).to.have.lengthOf( 4 )
 			expect( array ).to.be.instanceof( Array )
 			expect( index ).to.be.at.least( 0 ).and.lessThan( array.length )
-			previousValue + currentValue
+			return previousValue + currentValue
+		
+		sumPromiseFunction = ( previousValue, currentValue, index, array ) ->
+			expect( arguments ).to.have.lengthOf( 4 )
+			expect( array ).to.be.instanceof( Array )
+			expect( index ).to.be.at.least( 0 ).and.lessThan( array.length )
+			return Deft.Deferred.resolve( previousValue + currentValue )
 		
 		rejectFunction = ( previousValue, currentValue, index, array ) -> 
 			expect( arguments ).to.have.lengthOf( 4 )
 			expect( array ).to.be.instanceof( Array )
 			expect( index ).to.be.at.least( 0 ).and.lessThan( array.length )
-			Deft.Deferred.reject( new Error( 'error message' ) )
+			return Deft.Deferred.reject( new Error( 'error message' ) )
 		
 		describe( 'returns a Promise that will resolve with the value obtained by reducing the specified Array of Promise(s) or value(s) using the specified function and initial value', ->
 			specify( 'Empty Array and an initial value', ->
@@ -2102,6 +2108,268 @@ describe( 'Deft.promise.Promise', ->
 			return
 		)
 		
+		describe( 'returns a Promise that will resolve with the resolved Promise value obtained by reducing the specified Array of Promise(s) or value(s) using the specified function and initial value', ->
+			specify( 'Empty Array and an initial value', ->
+				promise = Deft.Promise.reduce( [], sumPromiseFunction, 0 )
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.eventually.equal( 0 )
+			)
+			
+			specify( 'Array with one value', ->
+				promise = Deft.Promise.reduce( [ 1 ], sumPromiseFunction )
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.eventually.equal( 1 )
+			)
+			
+			specify( 'Array with one value and an initial value', ->
+				promise = Deft.Promise.reduce( [ 1 ], sumPromiseFunction, 10 )
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.eventually.equal( 11 )
+			)
+			
+			specify( 'Array of values', ->
+				promise = Deft.Promise.reduce( [ 1, 2, 3, 4 ], sumPromiseFunction )
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.eventually.equal( 10 )
+			)
+			
+			specify( 'Array of values and an initial value', ->
+				promise = Deft.Promise.reduce( [ 1, 2, 3, 4 ], sumPromiseFunction, 10 )
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.eventually.equal( 20 )
+			)
+			
+			specify( 'Sparse Array', ->
+				promise = Deft.Promise.reduce( `[,2,,4,5]`, sumPromiseFunction )
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.eventually.equal( 11 )
+			)
+			
+			specify( 'Sparse Array and an initial value', ->
+				promise = Deft.Promise.reduce( `[,2,,4,5]`, sumPromiseFunction, 10 )
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.eventually.equal( 21 )
+			)
+			
+			specify( 'Array with one resolve Promise', ->
+				promise = Deft.Promise.reduce( [ Deft.Deferred.resolve( 1 ) ], sumPromiseFunction )
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.eventually.equal( 1 )
+			)
+			
+			specify( 'Array with one resolve Promise and an initial value', ->
+				promise = Deft.Promise.reduce( [ Deft.Deferred.resolve( 1 ) ], sumPromiseFunction, 10 )
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.eventually.equal( 11 )
+			)
+			
+			specify( 'Array of resolved Promises', ->
+				promise = Deft.Promise.reduce( [ Deft.Deferred.resolve( 1 ), Deft.Deferred.resolve( 2 ), Deft.Deferred.resolve( 3 ) ], sumPromiseFunction )
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.eventually.equal( 6 )
+			)
+			
+			specify( 'Array of resolved Promises and an initial value', ->
+				promise = Deft.Promise.reduce( [ Deft.Deferred.resolve( 1 ), Deft.Deferred.resolve( 2 ), Deft.Deferred.resolve( 3 ) ], sumPromiseFunction, 10 )
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.eventually.equal( 16 )
+			)
+			
+			specify( 'Array of values and resolved Promises', ->
+				promise = Deft.Promise.reduce( [ 1, Deft.Deferred.resolve( 2 ), 3, Deft.Deferred.resolve( 4 ) ], sumPromiseFunction )
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.eventually.equal( 10 )
+			)
+			
+			specify( 'Array of values and resolved Promises and an initial value', ->
+				promise = Deft.Promise.reduce( [ 1, Deft.Deferred.resolve( 2 ), 3, Deft.Deferred.resolve( 4 ) ], sumPromiseFunction, 10 )
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.eventually.equal( 20 )
+			)
+			
+			return
+		)
+		
+		describe( 'returns a Promise that will resolve with the resolved Promise value obtained by reducing the specified resolved Promise of an Array of Promise(s) or value(s) using the specified function and initial value', ->
+			specify( 'Empty Array and an initial value', ->
+				promise = Deft.Promise.reduce( 
+					Deft.Deferred.resolve(
+						[]
+					)
+					sumPromiseFunction
+					0
+				)
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.eventually.equal( 0 )
+			)
+			
+			specify( 'Array with one value', ->
+				promise = Deft.Promise.reduce( 
+					Deft.Deferred.resolve(
+						[ 1 ]
+					)
+					sumPromiseFunction
+				)
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.eventually.equal( 1 )
+			)
+			
+			specify( 'Array with one value and an initial value', ->
+				promise = Deft.Promise.reduce( 
+					Deft.Deferred.resolve(
+						[ 1 ]
+					)
+					sumPromiseFunction
+					10
+				)
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.eventually.equal( 11 )
+			)
+			
+			specify( 'Array of values', ->
+				promise = Deft.Promise.reduce(
+					Deft.Deferred.resolve(
+						[ 1, 2, 3, 4 ]
+					)
+					sumPromiseFunction
+				)
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.eventually.equal( 10 )
+			)
+			
+			specify( 'Array of values and an initial value', ->
+				promise = Deft.Promise.reduce(
+					Deft.Deferred.resolve(
+						[ 1, 2, 3, 4 ]
+					)
+					sumPromiseFunction
+					10
+				)
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.eventually.equal( 20 )
+			)
+			
+			specify( 'Sparse Array', ->
+				promise = Deft.Promise.reduce(
+					Deft.Deferred.resolve(
+						`[,2,,4,5]`
+					)
+					sumPromiseFunction
+				)
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.eventually.equal( 11 )
+			)
+			
+			specify( 'Sparse Array and an initial value', ->
+				promise = Deft.Promise.reduce(
+					Deft.Deferred.resolve(
+						`[,2,,4,5]`
+					)
+					sumPromiseFunction
+					10
+				)
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.eventually.equal( 21 )
+			)
+			
+			specify( 'Array with one resolve Promise', ->
+				promise = Deft.Promise.reduce(
+					Deft.Deferred.resolve(
+						[ Deft.Deferred.resolve( 1 ) ]
+					)
+					sumPromiseFunction
+				)
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.eventually.equal( 1 )
+			)
+			
+			specify( 'Array with one resolve Promise and an initial value', ->
+				promise = Deft.Promise.reduce( 
+					Deft.Deferred.resolve(
+						[ Deft.Deferred.resolve( 1 ) ]
+					)
+					sumPromiseFunction
+					10
+				)
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.eventually.equal( 11 )
+			)
+			
+			specify( 'Array of resolved Promises', ->
+				promise = Deft.Promise.reduce( 
+					Deft.Deferred.resolve(
+						[ Deft.Deferred.resolve( 1 ), Deft.Deferred.resolve( 2 ), Deft.Deferred.resolve( 3 ) ]
+					)
+					sumPromiseFunction
+				)
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.eventually.equal( 6 )
+			)
+			
+			specify( 'Array of resolved Promises and an initial value', ->
+				promise = Deft.Promise.reduce( 
+					Deft.Deferred.resolve(
+						[ Deft.Deferred.resolve( 1 ), Deft.Deferred.resolve( 2 ), Deft.Deferred.resolve( 3 ) ]
+					)
+					sumPromiseFunction
+					10
+				)
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.eventually.equal( 16 )
+			)
+			
+			specify( 'Array of values and resolved Promises', ->
+				promise = Deft.Promise.reduce( 
+					Deft.Deferred.resolve(
+						[ 1, Deft.Deferred.resolve( 2 ), 3, Deft.Deferred.resolve( 4 ) ]
+					)
+					sumPromiseFunction
+				)
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.eventually.equal( 10 )
+			)
+			
+			specify( 'Array of values and resolved Promises and an initial value', ->
+				promise = Deft.Promise.reduce( 
+					Deft.Deferred.resolve(
+						[ 1, Deft.Deferred.resolve( 2 ), 3, Deft.Deferred.resolve( 4 ) ]
+					)
+					sumPromiseFunction
+					10
+				)
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.eventually.equal( 20 )
+			)
+			
+			return
+		)
+		
 		describe( 'returns a new Promise that will reject with the error associated with the first Promise in the specified Array of Promise(s) or value(s) that rejects', ->
 			specify( 'Array with one rejected Promise', ->
 				promise = Deft.Promise.reduce( [ Deft.Deferred.reject( new Error( 'error message' ) ) ], sumFunction )
@@ -2325,7 +2593,6 @@ describe( 'Deft.promise.Promise', ->
 			return
 		)
 		
-		# TODO: Reduce returns a Promise
 		# TODO: Empty Array with no initial value
 		# TODO: Promise of Empty Array with no initial value
 		# TODO: No reduce function specified

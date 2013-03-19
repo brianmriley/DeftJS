@@ -1263,12 +1263,18 @@ describe('Deft.promise.Promise', function() {
     });
   });
   return describe('reduce()', function() {
-    var rejectFunction, sumFunction;
+    var rejectFunction, sumFunction, sumPromiseFunction;
     sumFunction = function(previousValue, currentValue, index, array) {
       expect(arguments).to.have.lengthOf(4);
       expect(array).to.be["instanceof"](Array);
       expect(index).to.be.at.least(0).and.lessThan(array.length);
       return previousValue + currentValue;
+    };
+    sumPromiseFunction = function(previousValue, currentValue, index, array) {
+      expect(arguments).to.have.lengthOf(4);
+      expect(array).to.be["instanceof"](Array);
+      expect(index).to.be.at.least(0).and.lessThan(array.length);
+      return Deft.Deferred.resolve(previousValue + currentValue);
     };
     rejectFunction = function(previousValue, currentValue, index, array) {
       expect(arguments).to.have.lengthOf(4);
@@ -1432,6 +1438,166 @@ describe('Deft.promise.Promise', function() {
       specify('Array of values and resolved Promises and an initial value', function() {
         var promise;
         promise = Deft.Promise.reduce(Deft.Deferred.resolve([1, Deft.Deferred.resolve(2), 3, Deft.Deferred.resolve(4)]), sumFunction, 10);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.equal(20);
+      });
+    });
+    describe('returns a Promise that will resolve with the resolved Promise value obtained by reducing the specified Array of Promise(s) or value(s) using the specified function and initial value', function() {
+      specify('Empty Array and an initial value', function() {
+        var promise;
+        promise = Deft.Promise.reduce([], sumPromiseFunction, 0);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.equal(0);
+      });
+      specify('Array with one value', function() {
+        var promise;
+        promise = Deft.Promise.reduce([1], sumPromiseFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.equal(1);
+      });
+      specify('Array with one value and an initial value', function() {
+        var promise;
+        promise = Deft.Promise.reduce([1], sumPromiseFunction, 10);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.equal(11);
+      });
+      specify('Array of values', function() {
+        var promise;
+        promise = Deft.Promise.reduce([1, 2, 3, 4], sumPromiseFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.equal(10);
+      });
+      specify('Array of values and an initial value', function() {
+        var promise;
+        promise = Deft.Promise.reduce([1, 2, 3, 4], sumPromiseFunction, 10);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.equal(20);
+      });
+      specify('Sparse Array', function() {
+        var promise;
+        promise = Deft.Promise.reduce([,2,,4,5], sumPromiseFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.equal(11);
+      });
+      specify('Sparse Array and an initial value', function() {
+        var promise;
+        promise = Deft.Promise.reduce([,2,,4,5], sumPromiseFunction, 10);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.equal(21);
+      });
+      specify('Array with one resolve Promise', function() {
+        var promise;
+        promise = Deft.Promise.reduce([Deft.Deferred.resolve(1)], sumPromiseFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.equal(1);
+      });
+      specify('Array with one resolve Promise and an initial value', function() {
+        var promise;
+        promise = Deft.Promise.reduce([Deft.Deferred.resolve(1)], sumPromiseFunction, 10);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.equal(11);
+      });
+      specify('Array of resolved Promises', function() {
+        var promise;
+        promise = Deft.Promise.reduce([Deft.Deferred.resolve(1), Deft.Deferred.resolve(2), Deft.Deferred.resolve(3)], sumPromiseFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.equal(6);
+      });
+      specify('Array of resolved Promises and an initial value', function() {
+        var promise;
+        promise = Deft.Promise.reduce([Deft.Deferred.resolve(1), Deft.Deferred.resolve(2), Deft.Deferred.resolve(3)], sumPromiseFunction, 10);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.equal(16);
+      });
+      specify('Array of values and resolved Promises', function() {
+        var promise;
+        promise = Deft.Promise.reduce([1, Deft.Deferred.resolve(2), 3, Deft.Deferred.resolve(4)], sumPromiseFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.equal(10);
+      });
+      specify('Array of values and resolved Promises and an initial value', function() {
+        var promise;
+        promise = Deft.Promise.reduce([1, Deft.Deferred.resolve(2), 3, Deft.Deferred.resolve(4)], sumPromiseFunction, 10);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.equal(20);
+      });
+    });
+    describe('returns a Promise that will resolve with the resolved Promise value obtained by reducing the specified resolved Promise of an Array of Promise(s) or value(s) using the specified function and initial value', function() {
+      specify('Empty Array and an initial value', function() {
+        var promise;
+        promise = Deft.Promise.reduce(Deft.Deferred.resolve([]), sumPromiseFunction, 0);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.equal(0);
+      });
+      specify('Array with one value', function() {
+        var promise;
+        promise = Deft.Promise.reduce(Deft.Deferred.resolve([1]), sumPromiseFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.equal(1);
+      });
+      specify('Array with one value and an initial value', function() {
+        var promise;
+        promise = Deft.Promise.reduce(Deft.Deferred.resolve([1]), sumPromiseFunction, 10);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.equal(11);
+      });
+      specify('Array of values', function() {
+        var promise;
+        promise = Deft.Promise.reduce(Deft.Deferred.resolve([1, 2, 3, 4]), sumPromiseFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.equal(10);
+      });
+      specify('Array of values and an initial value', function() {
+        var promise;
+        promise = Deft.Promise.reduce(Deft.Deferred.resolve([1, 2, 3, 4]), sumPromiseFunction, 10);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.equal(20);
+      });
+      specify('Sparse Array', function() {
+        var promise;
+        promise = Deft.Promise.reduce(Deft.Deferred.resolve([,2,,4,5]), sumPromiseFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.equal(11);
+      });
+      specify('Sparse Array and an initial value', function() {
+        var promise;
+        promise = Deft.Promise.reduce(Deft.Deferred.resolve([,2,,4,5]), sumPromiseFunction, 10);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.equal(21);
+      });
+      specify('Array with one resolve Promise', function() {
+        var promise;
+        promise = Deft.Promise.reduce(Deft.Deferred.resolve([Deft.Deferred.resolve(1)]), sumPromiseFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.equal(1);
+      });
+      specify('Array with one resolve Promise and an initial value', function() {
+        var promise;
+        promise = Deft.Promise.reduce(Deft.Deferred.resolve([Deft.Deferred.resolve(1)]), sumPromiseFunction, 10);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.equal(11);
+      });
+      specify('Array of resolved Promises', function() {
+        var promise;
+        promise = Deft.Promise.reduce(Deft.Deferred.resolve([Deft.Deferred.resolve(1), Deft.Deferred.resolve(2), Deft.Deferred.resolve(3)]), sumPromiseFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.equal(6);
+      });
+      specify('Array of resolved Promises and an initial value', function() {
+        var promise;
+        promise = Deft.Promise.reduce(Deft.Deferred.resolve([Deft.Deferred.resolve(1), Deft.Deferred.resolve(2), Deft.Deferred.resolve(3)]), sumPromiseFunction, 10);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.equal(16);
+      });
+      specify('Array of values and resolved Promises', function() {
+        var promise;
+        promise = Deft.Promise.reduce(Deft.Deferred.resolve([1, Deft.Deferred.resolve(2), 3, Deft.Deferred.resolve(4)]), sumPromiseFunction);
+        promise.should.be.an["instanceof"](Deft.Promise);
+        return promise.should.eventually.equal(10);
+      });
+      specify('Array of values and resolved Promises and an initial value', function() {
+        var promise;
+        promise = Deft.Promise.reduce(Deft.Deferred.resolve([1, Deft.Deferred.resolve(2), 3, Deft.Deferred.resolve(4)]), sumPromiseFunction, 10);
         promise.should.be.an["instanceof"](Deft.Promise);
         return promise.should.eventually.equal(20);
       });
