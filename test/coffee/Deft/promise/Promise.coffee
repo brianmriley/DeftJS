@@ -606,7 +606,7 @@ describe( 'Deft.promise.Promise', ->
 		)
 		
 		describe( 'returns a new Promise that will reject if none of the specified resolved Promise of an Array of Promises(s) or values resolves.', ->
-			specify( 'Empty Array', ->
+			specify( 'Promise of an empty Array', ->
 				promise = Deft.Promise.any( 
 					Deft.Deferred.resolve( [] )
 				)
@@ -615,7 +615,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.be.rejected.with( Error, 'No Promises were resolved.' )
 			)
 			
-			specify( 'Array with one rejected Promise', ->
+			specify( 'Promise of an Array with one rejected Promise', ->
 				promise = Deft.Promise.any( 
 					Deft.Deferred.resolve(
 						[ Deft.Deferred.reject( 'error message' ) ]
@@ -626,7 +626,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.be.rejected.with( Error, 'No Promises were resolved.' )
 			)
 			
-			specify( 'Array of rejected Promises', ->
+			specify( 'Promise of an Array of rejected Promises', ->
 				promise = Deft.Promise.any(
 					Deft.Deferred.resolve(
 						[ Deft.Deferred.reject( 'error message' ), Deft.Deferred.reject( 'error message' ), Deft.Deferred.reject( 'error message' ) ]
@@ -902,7 +902,7 @@ describe( 'Deft.promise.Promise', ->
 		)
 		
 		describe( 'returns a new Promise that will reject if too few of the specified resolved Promise of an Array of Promises(s) or values resolves.', ->
-			specify( 'Empty Array with one resolved value requested', ->
+			specify( 'Promise of an Empty Array with one resolved value requested', ->
 				promise = Deft.Promise.some( 
 					Deft.Deferred.resolve(
 						[]
@@ -914,7 +914,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.be.rejected.with( Error, 'Too few Promises were resolved.' )
 			)
 			
-			specify( 'Empty Array with multiple resolved values requested', ->
+			specify( 'Promise of an empty Array with multiple resolved values requested', ->
 				promise = Deft.Promise.some( 
 					Deft.Deferred.resolve(
 						[]
@@ -926,7 +926,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.be.rejected.with( Error, 'Too few Promises were resolved.' )
 			)
 			
-			specify( 'Array with one rejected Promise with one resolved value requested', ->
+			specify( 'Promise of an Array with one rejected Promise with one resolved value requested', ->
 				promise = Deft.Promise.some( 
 					Deft.Deferred.resolve(
 						[ Deft.Deferred.reject( 'error message' ) ]
@@ -938,7 +938,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.be.rejected.with( Error, 'Too few Promises were resolved.' )
 			)
 			
-			specify( 'Array with one rejected Promise with multiple resolved values requested', ->
+			specify( 'Promise of an Array with one rejected Promise with multiple resolved values requested', ->
 				promise = Deft.Promise.some(
 					Deft.Deferred.resolve(
 						[ Deft.Deferred.reject( 'error message' ) ]
@@ -950,7 +950,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.be.rejected.with( Error, 'Too few Promises were resolved.' )
 			)
 			
-			specify( 'Array of rejected Promises with one resolved value requested', ->
+			specify( 'Promise of an Array of rejected Promises with one resolved value requested', ->
 				promise = Deft.Promise.some(
 					Deft.Deferred.resolve(
 						[ Deft.Deferred.reject( 'error message' ), Deft.Deferred.reject( 'error message' ), Deft.Deferred.reject( 'error message' ) ]
@@ -962,7 +962,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.be.rejected.with( Error, 'Too few Promises were resolved.' )
 			)
 			
-			specify( 'Array of rejected Promises with multiple resolved values requested', ->
+			specify( 'Promise of an Array of rejected Promises with multiple resolved values requested', ->
 				promise = Deft.Promise.some(
 					Deft.Deferred.resolve(
 						[ Deft.Deferred.reject( 'error message' ), Deft.Deferred.reject( 'error message' ), Deft.Deferred.reject( 'error message' ) ]
@@ -1376,7 +1376,7 @@ describe( 'Deft.promise.Promise', ->
 		)
 		
 		describe( 'returns a new Promise that will resolve with an Array of the mapped values for the specified resolved Promise of an Array of Promise(s) or value(s)', ->
-			specify( 'Empty Array', ->
+			specify( 'Promise of an empty Array', ->
 				promise = Deft.Promise.map( 
 					Deft.Deferred.resolve(
 						[]
@@ -1388,7 +1388,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.eventually.deep.equal( [] )
 			)
 			
-			specify( 'Array with one value', ->
+			specify( 'Promise of an Array with one value', ->
 				promise = Deft.Promise.map(
 					Deft.Deferred.resolve(
 						[ 1 ]
@@ -1400,7 +1400,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.eventually.deep.equal( [ 2 ] )
 			)
 			
-			specify( 'Array of values', ->
+			specify( 'Promise of an Array of values', ->
 				promise = Deft.Promise.map(
 					Deft.Deferred.resolve(
 						[ 1, 2, 3 ]
@@ -1412,7 +1412,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.eventually.deep.equal( [ 2, 4, 6 ] )
 			)
 			
-			specify( 'Sparse Array', ->
+			specify( 'Promise of a sparse Array', ->
 				promise = Deft.Promise.map(
 					Deft.Deferred.resolve(
 						`[,2,,4,5]`
@@ -1424,7 +1424,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.eventually.deep.equal( `[,4,,8,10]` )
 			)
 			
-			specify( 'Array with one resolved Promise', ->
+			specify( 'Promise of an Array with one resolved Promise', ->
 				promise = Deft.Promise.map(
 					Deft.Deferred.resolve(
 						[ Deft.Deferred.resolve( 1 ) ]
@@ -1436,7 +1436,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.eventually.deep.equal( [ 2 ] )
 			)
 			
-			specify( 'Array of resolved Promises', ->
+			specify( 'Promise of an Array of resolved Promises', ->
 				promise = Deft.Promise.map(
 					Deft.Deferred.resolve(
 						[ Deft.Deferred.resolve( 1 ), Deft.Deferred.resolve( 2 ), Deft.Deferred.resolve( 3 ) ]
@@ -1448,7 +1448,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.eventually.deep.equal( [ 2, 4, 6 ] )
 			)
 			
-			specify( 'Array of values and resolved Promises', ->
+			specify( 'Promise of an Array of values and resolved Promises', ->
 				promise = Deft.Promise.map(
 					Deft.Deferred.resolve(
 						[ 1, Deft.Deferred.resolve( 2 ), Deft.Deferred.resolve( 3 ), 4 ]
@@ -1517,7 +1517,7 @@ describe( 'Deft.promise.Promise', ->
 		)
 		
 		describe( 'returns a new Promise that will resolve with an Array of the resolved mapped Promises values for the specified resolved Promise of an Array of Promise(s) or value(s)', ->
-			specify( 'Empty Array', ->
+			specify( 'Promise of an empty Array', ->
 				promise = Deft.Promise.map( 
 					Deft.Deferred.resolve(
 						[]
@@ -1529,7 +1529,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.eventually.deep.equal( [] )
 			)
 			
-			specify( 'Array with one value', ->
+			specify( 'Promise of an Array with one value', ->
 				promise = Deft.Promise.map(
 					Deft.Deferred.resolve(
 						[ 1 ]
@@ -1541,7 +1541,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.eventually.deep.equal( [ 2 ] )
 			)
 			
-			specify( 'Array of values', ->
+			specify( 'Promise of an Array of values', ->
 				promise = Deft.Promise.map(
 					Deft.Deferred.resolve(
 						[ 1, 2, 3 ]
@@ -1553,7 +1553,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.eventually.deep.equal( [ 2, 4, 6 ] )
 			)
 			
-			specify( 'Sparse Array', ->
+			specify( 'Promise of a sparse Array', ->
 				promise = Deft.Promise.map(
 					Deft.Deferred.resolve(
 						`[,2,,4,5]`
@@ -1565,7 +1565,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.eventually.deep.equal( `[,4,,8,10]` )
 			)
 			
-			specify( 'Array with one resolved Promise', ->
+			specify( 'Promise of an Array with one resolved Promise', ->
 				promise = Deft.Promise.map(
 					Deft.Deferred.resolve(
 						[ Deft.Deferred.resolve( 1 ) ]
@@ -1577,7 +1577,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.eventually.deep.equal( [ 2 ] )
 			)
 			
-			specify( 'Array of resolved Promises', ->
+			specify( 'Promise of an Array of resolved Promises', ->
 				promise = Deft.Promise.map(
 					Deft.Deferred.resolve(
 						[ Deft.Deferred.resolve( 1 ), Deft.Deferred.resolve( 2 ), Deft.Deferred.resolve( 3 ) ]
@@ -1589,7 +1589,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.eventually.deep.equal( [ 2, 4, 6 ] )
 			)
 			
-			specify( 'Array of values and resolved Promises', ->
+			specify( 'Promise of an Array of values and resolved Promises', ->
 				promise = Deft.Promise.map(
 					Deft.Deferred.resolve(
 						[ 1, Deft.Deferred.resolve( 2 ), Deft.Deferred.resolve( 3 ), 4 ]
@@ -1612,14 +1612,14 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.be.rejected.with( Error, 'error message' )
 			)
 			
-			specify( 'Array with values and a rejected Promise', ->
+			specify( 'Array of values and a rejected Promise', ->
 				promise = Deft.Promise.map( [ 1, Deft.Deferred.reject( new Error( 'error message' ) ), 3 ], doubleFunction )
 				
 				promise.should.be.an.instanceof( Deft.Promise )
 				return promise.should.be.rejected.with( Error, 'error message' )
 			)
 			
-			specify( 'Array with resolved Promises and a rejected Promise', ->
+			specify( 'Array of resolved Promises and a rejected Promise', ->
 				promise = Deft.Promise.map( [ Deft.Deferred.resolve( 1 ), Deft.Deferred.reject( new Error( 'error message' ) ), Deft.Deferred.resolve( 3 ) ], doubleFunction )
 				
 				promise.should.be.an.instanceof( Deft.Promise )
@@ -1637,7 +1637,7 @@ describe( 'Deft.promise.Promise', ->
 		)
 		
 		describe( 'returns a new Promise that will reject with the error associated with the first Promise in the specified resolved Promise of an Array of Promise(s) or value(s) that rejects', ->
-			specify( 'Array with one rejected Promise', ->
+			specify( 'Promise of an Array with one rejected Promise', ->
 				promise = Deft.Promise.map( 
 					Deft.Deferred.resolve(
 						[ Deft.Deferred.reject( new Error( 'error message' ) ) ]
@@ -1649,7 +1649,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.be.rejected.with( Error, 'error message' )
 			)
 			
-			specify( 'Array with values and a rejected Promise', ->
+			specify( 'Promise of an Array of values and a rejected Promise', ->
 				promise = Deft.Promise.map(
 					Deft.Deferred.resolve(
 						[ 1, Deft.Deferred.reject( new Error( 'error message' ) ), 3 ]
@@ -1661,7 +1661,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.be.rejected.with( Error, 'error message' )
 			)
 			
-			specify( 'Array with resolved Promises and a rejected Promise', ->
+			specify( 'Promise of an Array of resolved Promises and a rejected Promise', ->
 				promise = Deft.Promise.map(
 					Deft.Deferred.resolve(
 						[ Deft.Deferred.resolve( 1 ), Deft.Deferred.reject( new Error( 'error message' ) ), Deft.Deferred.resolve( 3 ) ]
@@ -1673,7 +1673,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.be.rejected.with( Error, 'error message' )
 			)
 			
-			specify( 'Array of values, pending and resolved Promises and a rejected Promise', ->
+			specify( 'Promise of an Array of values, pending and resolved Promises and a rejected Promise', ->
 				promise = Deft.Promise.map( 
 					Deft.Deferred.resolve(
 						[ 1, 2, Deft.Deferred.reject( new Error( 'error message' ) ), Deft.Deferred.resolve( 4 ), Ext.create( 'Deft.Deferred' ).promise ]
@@ -1735,7 +1735,7 @@ describe( 'Deft.promise.Promise', ->
 		)
 		
 		describe( 'returns a new Promise that will reject with the error associated with the first mapped Promise value in the specified resolved Promise of an Array of Promise(s) or value(s) that rejects', ->
-			specify( 'Array with one value', ->
+			specify( 'Promise of an Array with one value', ->
 				promise = Deft.Promise.map(
 					Deft.Deferred.resolve(
 						[ 1 ]
@@ -1747,7 +1747,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.be.rejected.with( Error, 'error message' )
 			)
 			
-			specify( 'Array of values', ->
+			specify( 'Promise of an Array of values', ->
 				promise = Deft.Promise.map(
 					Deft.Deferred.resolve(
 						[ 1, 2, 3 ]
@@ -1759,7 +1759,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.be.rejected.with( Error, 'error message' )
 			)
 			
-			specify( 'Sparse Array', ->
+			specify( 'Promise of a sparse Array', ->
 				promise = Deft.Promise.map(
 					Deft.Deferred.resolve(
 						`[,2,,4,5]`
@@ -1771,7 +1771,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.be.rejected.with( Error, 'error message' )
 			)
 			
-			specify( 'Array with one resolved Promise', ->
+			specify( 'Promise of an Array with one resolved Promise', ->
 				promise = Deft.Promise.map(
 					Deft.Deferred.resolve(
 						[ Deft.Deferred.resolve( 1 ) ]
@@ -1783,7 +1783,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.be.rejected.with( Error, 'error message' )
 			)
 			
-			specify( 'Array of resolved Promises', ->
+			specify( 'Promise of an Array of resolved Promises', ->
 				promise = Deft.Promise.map(
 					Deft.Deferred.resolve(
 						[ Deft.Deferred.resolve( 1 ), Deft.Deferred.resolve( 2 ), Deft.Deferred.resolve( 3 ) ]
@@ -1795,7 +1795,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.be.rejected.with( Error, 'error message' )
 			)
 			
-			specify( 'Array of values and resolved Promises', ->
+			specify( 'Promise of an Array of values and resolved Promises', ->
 				promise = Deft.Promise.map(
 					Deft.Deferred.resolve(
 						[ 1, Deft.Deferred.resolve( 2 ), Deft.Deferred.resolve( 3 ), 4 ]
@@ -1821,8 +1821,35 @@ describe( 'Deft.promise.Promise', ->
 			return
 		)
 		
-		# TODO: Error if non-Array specified
-		# TODO: Error if no map function specified
+		describe( 'throws an Error if anything other than an Array or Promise of an Array and a function are specified', ->
+			specify( 'no parameters', ->
+				expect( -> Deft.Promise.map() ).to.throw( Error, 'Invalid parameter: expected an Array or Promise of an Array.' )
+			)
+			
+			specify( 'a single non-Array parameter', ->
+				expect( -> Deft.Promise.map( 1 ) ).to.throw( Error, 'Invalid parameter: expected an Array or Promise of an Array.' )
+			)
+			
+			specify( 'multiple non-Array parameters', ->
+				expect( -> Deft.Promise.map( 1, 2, 3 ) ).to.throw( Error, 'Invalid parameter: expected an Array or Promise of an Array.' )
+			)
+			
+			specify( 'an Array and no function', ->
+				expect( -> Deft.Promise.map( [ 1, 2, 3 ] ) ).to.throw( Error, 'Invalid parameter: expected a function.' )
+			)
+			
+			specify( 'a Promise of an Array and no function', ->
+				expect( -> Deft.Promise.map( Deft.Deferred.resolve( [ 1, 2, 3 ] ) ) ).to.throw( Error, 'Invalid parameter: expected a function.' )
+			)
+			
+			specify( 'an Array and a non-function parameter', ->
+				expect( -> Deft.Promise.map( [ 1, 2, 3 ], 'not a function' ) ).to.throw( Error, 'Invalid parameter: expected a function.' )
+			)
+			
+			specify( 'a Promise of a non-function parameter', ->
+				expect( -> Deft.Promise.map( Deft.Deferred.resolve( [ 1, 2, 3 ], 'not a function' ) ) ).to.throw( Error, 'Invalid parameter: expected a function.' )
+			)
+		)
 		
 		return
 	)
@@ -1854,6 +1881,13 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.eventually.equal( 0 )
 			)
 			
+			specify( 'Empty Array and a resolved Promise of an initial value', ->
+				promise = Deft.Promise.reduce( [], sumFunction, Deft.Deferred.resolve( 0 ) )
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.eventually.equal( 0 )
+			)
+			
 			specify( 'Array with one value', ->
 				promise = Deft.Promise.reduce( [ 1 ], sumFunction )
 				
@@ -1863,6 +1897,13 @@ describe( 'Deft.promise.Promise', ->
 			
 			specify( 'Array with one value and an initial value', ->
 				promise = Deft.Promise.reduce( [ 1 ], sumFunction, 10 )
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.eventually.equal( 11 )
+			)
+			
+			specify( 'Array with one value and a resolved Promise of an initial value', ->
+				promise = Deft.Promise.reduce( [ 1 ], sumFunction, Deft.Deferred.resolve( 10 ) )
 				
 				promise.should.be.an.instanceof( Deft.Promise )
 				return promise.should.eventually.equal( 11 )
@@ -1882,6 +1923,13 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.eventually.equal( 20 )
 			)
 			
+			specify( 'Array of values and a resolved Promise of an initial value', ->
+				promise = Deft.Promise.reduce( [ 1, 2, 3, 4 ], sumFunction, Deft.Deferred.resolve( 10 ) )
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.eventually.equal( 20 )
+			)
+			
 			specify( 'Sparse Array', ->
 				promise = Deft.Promise.reduce( `[,2,,4,5]`, sumFunction )
 				
@@ -1896,15 +1944,29 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.eventually.equal( 21 )
 			)
 			
-			specify( 'Array with one resolve Promise', ->
+			specify( 'Sparse Array and a resolved Promise of an initial value', ->
+				promise = Deft.Promise.reduce( `[,2,,4,5]`, sumFunction, Deft.Deferred.resolve( 10 ) )
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.eventually.equal( 21 )
+			)
+			
+			specify( 'Array with one resolved Promise', ->
 				promise = Deft.Promise.reduce( [ Deft.Deferred.resolve( 1 ) ], sumFunction )
 				
 				promise.should.be.an.instanceof( Deft.Promise )
 				return promise.should.eventually.equal( 1 )
 			)
 			
-			specify( 'Array with one resolve Promise and an initial value', ->
+			specify( 'Array with one resolved Promise and an initial value', ->
 				promise = Deft.Promise.reduce( [ Deft.Deferred.resolve( 1 ) ], sumFunction, 10 )
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.eventually.equal( 11 )
+			)
+			
+			specify( 'Array with one resolved Promise and a resolved Promise of an initial value', ->
+				promise = Deft.Promise.reduce( [ Deft.Deferred.resolve( 1 ) ], sumFunction, Deft.Deferred.resolve( 10 ) )
 				
 				promise.should.be.an.instanceof( Deft.Promise )
 				return promise.should.eventually.equal( 11 )
@@ -1924,6 +1986,13 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.eventually.equal( 16 )
 			)
 			
+			specify( 'Array of resolved Promises and a resolved Promise of an initial value', ->
+				promise = Deft.Promise.reduce( [ Deft.Deferred.resolve( 1 ), Deft.Deferred.resolve( 2 ), Deft.Deferred.resolve( 3 ) ], sumFunction, Deft.Deferred.resolve( 10 ) )
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.eventually.equal( 16 )
+			)
+			
 			specify( 'Array of values and resolved Promises', ->
 				promise = Deft.Promise.reduce( [ 1, Deft.Deferred.resolve( 2 ), 3, Deft.Deferred.resolve( 4 ) ], sumFunction )
 				
@@ -1938,11 +2007,18 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.eventually.equal( 20 )
 			)
 			
+			specify( 'Array of values and resolved Promises and a resolved Promise of an initial value', ->
+				promise = Deft.Promise.reduce( [ 1, Deft.Deferred.resolve( 2 ), 3, Deft.Deferred.resolve( 4 ) ], sumFunction, Deft.Deferred.resolve( 10 ) )
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.eventually.equal( 20 )
+			)
+			
 			return
 		)
 		
 		describe( 'returns a Promise that will resolve with the value obtained by reducing the specified resolved Promise of an Array of Promise(s) or value(s) using the specified function and initial value', ->
-			specify( 'Empty Array and an initial value', ->
+			specify( 'Promise of an empty Array and an initial value', ->
 				promise = Deft.Promise.reduce( 
 					Deft.Deferred.resolve(
 						[]
@@ -1955,7 +2031,20 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.eventually.equal( 0 )
 			)
 			
-			specify( 'Array with one value', ->
+			specify( 'Promise of an empty Array and a resolved Promise of an initial value', ->
+				promise = Deft.Promise.reduce( 
+					Deft.Deferred.resolve(
+						[]
+					)
+					sumFunction
+					Deft.Deferred.resolve( 0 )
+				)
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.eventually.equal( 0 )
+			)
+			
+			specify( 'Promise of an Array with one value', ->
 				promise = Deft.Promise.reduce( 
 					Deft.Deferred.resolve(
 						[ 1 ]
@@ -1967,7 +2056,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.eventually.equal( 1 )
 			)
 			
-			specify( 'Array with one value and an initial value', ->
+			specify( 'Promise of an Array with one value and an initial value', ->
 				promise = Deft.Promise.reduce( 
 					Deft.Deferred.resolve(
 						[ 1 ]
@@ -1980,7 +2069,20 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.eventually.equal( 11 )
 			)
 			
-			specify( 'Array of values', ->
+			specify( 'Promise of an Array with one value and a resolved Promise of an initial value', ->
+				promise = Deft.Promise.reduce( 
+					Deft.Deferred.resolve(
+						[ 1 ]
+					)
+					sumFunction
+					Deft.Deferred.resolve( 10 )
+				)
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.eventually.equal( 11 )
+			)
+			
+			specify( 'Promise of an Array of values', ->
 				promise = Deft.Promise.reduce(
 					Deft.Deferred.resolve(
 						[ 1, 2, 3, 4 ]
@@ -1992,7 +2094,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.eventually.equal( 10 )
 			)
 			
-			specify( 'Array of values and an initial value', ->
+			specify( 'Promise of an Array of values and an initial value', ->
 				promise = Deft.Promise.reduce(
 					Deft.Deferred.resolve(
 						[ 1, 2, 3, 4 ]
@@ -2005,7 +2107,20 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.eventually.equal( 20 )
 			)
 			
-			specify( 'Sparse Array', ->
+			specify( 'Promise of an Array of values and a resolved Promise of an initial value', ->
+				promise = Deft.Promise.reduce(
+					Deft.Deferred.resolve(
+						[ 1, 2, 3, 4 ]
+					)
+					sumFunction
+					Deft.Deferred.resolve( 10 )
+				)
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.eventually.equal( 20 )
+			)
+			
+			specify( 'Promise of a sparse Array', ->
 				promise = Deft.Promise.reduce(
 					Deft.Deferred.resolve(
 						`[,2,,4,5]`
@@ -2017,7 +2132,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.eventually.equal( 11 )
 			)
 			
-			specify( 'Sparse Array and an initial value', ->
+			specify( 'Promise of a sparse Array and an initial value', ->
 				promise = Deft.Promise.reduce(
 					Deft.Deferred.resolve(
 						`[,2,,4,5]`
@@ -2030,7 +2145,20 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.eventually.equal( 21 )
 			)
 			
-			specify( 'Array with one resolve Promise', ->
+			specify( 'Promise of a sparse Array and a resolved Promise of an initial value', ->
+				promise = Deft.Promise.reduce(
+					Deft.Deferred.resolve(
+						`[,2,,4,5]`
+					)
+					sumFunction
+					Deft.Deferred.resolve( 10 )
+				)
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.eventually.equal( 21 )
+			)
+			
+			specify( 'Promise of an Array with one resolved Promise', ->
 				promise = Deft.Promise.reduce(
 					Deft.Deferred.resolve(
 						[ Deft.Deferred.resolve( 1 ) ]
@@ -2042,7 +2170,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.eventually.equal( 1 )
 			)
 			
-			specify( 'Array with one resolve Promise and an initial value', ->
+			specify( 'Promise of an Array with one resolved Promise and an initial value', ->
 				promise = Deft.Promise.reduce( 
 					Deft.Deferred.resolve(
 						[ Deft.Deferred.resolve( 1 ) ]
@@ -2055,7 +2183,20 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.eventually.equal( 11 )
 			)
 			
-			specify( 'Array of resolved Promises', ->
+			specify( 'Promise of an Array with one resolved Promise and a resolved Promise of an initial value', ->
+				promise = Deft.Promise.reduce( 
+					Deft.Deferred.resolve(
+						[ Deft.Deferred.resolve( 1 ) ]
+					)
+					sumFunction
+					Deft.Deferred.resolve( 10 )
+				)
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.eventually.equal( 11 )
+			)
+			
+			specify( 'Promise of an Array of resolved Promises', ->
 				promise = Deft.Promise.reduce( 
 					Deft.Deferred.resolve(
 						[ Deft.Deferred.resolve( 1 ), Deft.Deferred.resolve( 2 ), Deft.Deferred.resolve( 3 ) ]
@@ -2067,7 +2208,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.eventually.equal( 6 )
 			)
 			
-			specify( 'Array of resolved Promises and an initial value', ->
+			specify( 'Promise of an Array of resolved Promises and an initial value', ->
 				promise = Deft.Promise.reduce( 
 					Deft.Deferred.resolve(
 						[ Deft.Deferred.resolve( 1 ), Deft.Deferred.resolve( 2 ), Deft.Deferred.resolve( 3 ) ]
@@ -2080,7 +2221,20 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.eventually.equal( 16 )
 			)
 			
-			specify( 'Array of values and resolved Promises', ->
+			specify( 'Promise of an Array of resolved Promises and a resolved Promise of an initial value', ->
+				promise = Deft.Promise.reduce( 
+					Deft.Deferred.resolve(
+						[ Deft.Deferred.resolve( 1 ), Deft.Deferred.resolve( 2 ), Deft.Deferred.resolve( 3 ) ]
+					)
+					sumFunction
+					Deft.Deferred.resolve( 10 )
+				)
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.eventually.equal( 16 )
+			)
+			
+			specify( 'Promise of an Array of values and resolved Promises', ->
 				promise = Deft.Promise.reduce( 
 					Deft.Deferred.resolve(
 						[ 1, Deft.Deferred.resolve( 2 ), 3, Deft.Deferred.resolve( 4 ) ]
@@ -2092,13 +2246,26 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.eventually.equal( 10 )
 			)
 			
-			specify( 'Array of values and resolved Promises and an initial value', ->
+			specify( 'Promise of an Array of values and resolved Promises and an initial value', ->
 				promise = Deft.Promise.reduce( 
 					Deft.Deferred.resolve(
 						[ 1, Deft.Deferred.resolve( 2 ), 3, Deft.Deferred.resolve( 4 ) ]
 					)
 					sumFunction
 					10
+				)
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.eventually.equal( 20 )
+			)
+			
+			specify( 'Promise of an Array of values and resolved Promises and a resolved Promise of an initial value', ->
+				promise = Deft.Promise.reduce( 
+					Deft.Deferred.resolve(
+						[ 1, Deft.Deferred.resolve( 2 ), 3, Deft.Deferred.resolve( 4 ) ]
+					)
+					sumFunction
+					Deft.Deferred.resolve( 10 )
 				)
 				
 				promise.should.be.an.instanceof( Deft.Promise )
@@ -2158,14 +2325,14 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.eventually.equal( 21 )
 			)
 			
-			specify( 'Array with one resolve Promise', ->
+			specify( 'Array with one resolved Promise', ->
 				promise = Deft.Promise.reduce( [ Deft.Deferred.resolve( 1 ) ], sumPromiseFunction )
 				
 				promise.should.be.an.instanceof( Deft.Promise )
 				return promise.should.eventually.equal( 1 )
 			)
 			
-			specify( 'Array with one resolve Promise and an initial value', ->
+			specify( 'Array with one resolved Promise and an initial value', ->
 				promise = Deft.Promise.reduce( [ Deft.Deferred.resolve( 1 ) ], sumPromiseFunction, 10 )
 				
 				promise.should.be.an.instanceof( Deft.Promise )
@@ -2204,7 +2371,7 @@ describe( 'Deft.promise.Promise', ->
 		)
 		
 		describe( 'returns a Promise that will resolve with the resolved Promise value obtained by reducing the specified resolved Promise of an Array of Promise(s) or value(s) using the specified function and initial value', ->
-			specify( 'Empty Array and an initial value', ->
+			specify( 'Promise of an empty Array and an initial value', ->
 				promise = Deft.Promise.reduce( 
 					Deft.Deferred.resolve(
 						[]
@@ -2217,7 +2384,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.eventually.equal( 0 )
 			)
 			
-			specify( 'Array with one value', ->
+			specify( 'Promise of an Array with one value', ->
 				promise = Deft.Promise.reduce( 
 					Deft.Deferred.resolve(
 						[ 1 ]
@@ -2229,7 +2396,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.eventually.equal( 1 )
 			)
 			
-			specify( 'Array with one value and an initial value', ->
+			specify( 'Promise of an Array with one value and an initial value', ->
 				promise = Deft.Promise.reduce( 
 					Deft.Deferred.resolve(
 						[ 1 ]
@@ -2242,7 +2409,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.eventually.equal( 11 )
 			)
 			
-			specify( 'Array of values', ->
+			specify( 'Promise of an Array of values', ->
 				promise = Deft.Promise.reduce(
 					Deft.Deferred.resolve(
 						[ 1, 2, 3, 4 ]
@@ -2254,7 +2421,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.eventually.equal( 10 )
 			)
 			
-			specify( 'Array of values and an initial value', ->
+			specify( 'Promise of an Array of values and an initial value', ->
 				promise = Deft.Promise.reduce(
 					Deft.Deferred.resolve(
 						[ 1, 2, 3, 4 ]
@@ -2267,7 +2434,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.eventually.equal( 20 )
 			)
 			
-			specify( 'Sparse Array', ->
+			specify( 'Promise of a sparse Array', ->
 				promise = Deft.Promise.reduce(
 					Deft.Deferred.resolve(
 						`[,2,,4,5]`
@@ -2279,7 +2446,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.eventually.equal( 11 )
 			)
 			
-			specify( 'Sparse Array and an initial value', ->
+			specify( 'Promise of a sparse Array and an initial value', ->
 				promise = Deft.Promise.reduce(
 					Deft.Deferred.resolve(
 						`[,2,,4,5]`
@@ -2292,7 +2459,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.eventually.equal( 21 )
 			)
 			
-			specify( 'Array with one resolve Promise', ->
+			specify( 'Promise of an Array with one resolved Promise', ->
 				promise = Deft.Promise.reduce(
 					Deft.Deferred.resolve(
 						[ Deft.Deferred.resolve( 1 ) ]
@@ -2304,7 +2471,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.eventually.equal( 1 )
 			)
 			
-			specify( 'Array with one resolve Promise and an initial value', ->
+			specify( 'Promise of an Array with one resolved Promise and an initial value', ->
 				promise = Deft.Promise.reduce( 
 					Deft.Deferred.resolve(
 						[ Deft.Deferred.resolve( 1 ) ]
@@ -2317,7 +2484,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.eventually.equal( 11 )
 			)
 			
-			specify( 'Array of resolved Promises', ->
+			specify( 'Promise of an Array of resolved Promises', ->
 				promise = Deft.Promise.reduce( 
 					Deft.Deferred.resolve(
 						[ Deft.Deferred.resolve( 1 ), Deft.Deferred.resolve( 2 ), Deft.Deferred.resolve( 3 ) ]
@@ -2329,7 +2496,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.eventually.equal( 6 )
 			)
 			
-			specify( 'Array of resolved Promises and an initial value', ->
+			specify( 'Promise of an Array of resolved Promises and an initial value', ->
 				promise = Deft.Promise.reduce( 
 					Deft.Deferred.resolve(
 						[ Deft.Deferred.resolve( 1 ), Deft.Deferred.resolve( 2 ), Deft.Deferred.resolve( 3 ) ]
@@ -2342,7 +2509,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.eventually.equal( 16 )
 			)
 			
-			specify( 'Array of values and resolved Promises', ->
+			specify( 'Promise of an Array of values and resolved Promises', ->
 				promise = Deft.Promise.reduce( 
 					Deft.Deferred.resolve(
 						[ 1, Deft.Deferred.resolve( 2 ), 3, Deft.Deferred.resolve( 4 ) ]
@@ -2354,7 +2521,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.eventually.equal( 10 )
 			)
 			
-			specify( 'Array of values and resolved Promises and an initial value', ->
+			specify( 'Promise of an Array of values and resolved Promises and an initial value', ->
 				promise = Deft.Promise.reduce( 
 					Deft.Deferred.resolve(
 						[ 1, Deft.Deferred.resolve( 2 ), 3, Deft.Deferred.resolve( 4 ) ]
@@ -2378,14 +2545,14 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.be.rejected.with( Error, 'error message' )
 			)
 			
-			specify( 'Array with values and a rejected Promise', ->
+			specify( 'Array of values and a rejected Promise', ->
 				promise = Deft.Promise.reduce( [ 1, Deft.Deferred.reject( new Error( 'error message' ) ), 3 ], sumFunction )
 				
 				promise.should.be.an.instanceof( Deft.Promise )
 				return promise.should.be.rejected.with( Error, 'error message' )
 			)
 			
-			specify( 'Array with resolved Promises and a rejected Promise', ->
+			specify( 'Array of resolved Promises and a rejected Promise', ->
 				promise = Deft.Promise.reduce( [ Deft.Deferred.resolve( 1 ), Deft.Deferred.reject( new Error( 'error message' ) ), Deft.Deferred.resolve( 3 ) ], sumFunction )
 				
 				promise.should.be.an.instanceof( Deft.Promise )
@@ -2403,7 +2570,7 @@ describe( 'Deft.promise.Promise', ->
 		)
 		
 		describe( 'returns a new Promise that will reject with the error associated with the first Promise in the specified resolved Promise of an Array of Promise(s) or value(s) that rejects', ->
-			specify( 'Array with one rejected Promise', ->
+			specify( 'Promise of an Array with one rejected Promise', ->
 				promise = Deft.Promise.reduce( 
 					Deft.Deferred.resolve(
 						[ Deft.Deferred.reject( new Error( 'error message' ) ) ]
@@ -2415,7 +2582,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.be.rejected.with( Error, 'error message' )
 			)
 			
-			specify( 'Array with values and a rejected Promise', ->
+			specify( 'Promise of an Array of values and a rejected Promise', ->
 				promise = Deft.Promise.reduce(
 					Deft.Deferred.resolve(
 						[ 1, Deft.Deferred.reject( new Error( 'error message' ) ), 3 ]
@@ -2427,7 +2594,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.be.rejected.with( Error, 'error message' )
 			)
 			
-			specify( 'Array with resolved Promises and a rejected Promise', ->
+			specify( 'Promise of an Array of resolved Promises and a rejected Promise', ->
 				promise = Deft.Promise.reduce(
 					Deft.Deferred.resolve(
 						[ Deft.Deferred.resolve( 1 ), Deft.Deferred.reject( new Error( 'error message' ) ), Deft.Deferred.resolve( 3 ) ]
@@ -2439,7 +2606,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.be.rejected.with( Error, 'error message' )
 			)
 			
-			specify( 'Array of values, pending and resolved Promises and a rejected Promise', ->
+			specify( 'Promise of an Array of values, pending and resolved Promises and a rejected Promise', ->
 				promise = Deft.Promise.reduce( 
 					Deft.Deferred.resolve(
 						[ 1, 2, Deft.Deferred.reject( new Error( 'error message' ) ), Deft.Deferred.resolve( 4 ), Ext.create( 'Deft.Deferred' ).promise ]
@@ -2512,7 +2679,7 @@ describe( 'Deft.promise.Promise', ->
 		)
 		
 		describe( 'returns a new Promise that will reject with the error associated with the first rejected Promise returned by the specified function for the the specified resolved Promise of an Array of Promise(s) or value(s)', ->
-			specify( 'Array with one value', ->
+			specify( 'Promise of an Array with one value', ->
 				promise = Deft.Promise.reduce(
 					Deft.Deferred.resolve(
 						[ 1 ]
@@ -2525,7 +2692,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.be.rejected.with( Error, 'error message' )
 			)
 			
-			specify( 'Array of values', ->
+			specify( 'Promise of an Array of values', ->
 				promise = Deft.Promise.reduce(
 					Deft.Deferred.resolve(
 						[ 1, 2, 3 ]
@@ -2538,7 +2705,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.be.rejected.with( Error, 'error message' )
 			)
 			
-			specify( 'Sparse Array', ->
+			specify( 'Promise of a sparse Array', ->
 				promise = Deft.Promise.reduce(
 					Deft.Deferred.resolve(
 						`[,2,,4,5]`
@@ -2551,7 +2718,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.be.rejected.with( Error, 'error message' )
 			)
 			
-			specify( 'Array with one resolved Promise', ->
+			specify( 'Promise of an Array with one resolved Promise', ->
 				promise = Deft.Promise.reduce(
 					Deft.Deferred.resolve(
 						[ Deft.Deferred.resolve( 1 ) ]
@@ -2564,7 +2731,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.be.rejected.with( Error, 'error message' )
 			)
 			
-			specify( 'Array of resolved Promises', ->
+			specify( 'Promise of an Array of resolved Promises', ->
 				promise = Deft.Promise.reduce(
 					Deft.Deferred.resolve(
 						[ Deft.Deferred.resolve( 1 ), Deft.Deferred.resolve( 2 ), Deft.Deferred.resolve( 3 ) ]
@@ -2577,7 +2744,7 @@ describe( 'Deft.promise.Promise', ->
 				return promise.should.be.rejected.with( Error, 'error message' )
 			)
 			
-			specify( 'Array of values and resolved Promises', ->
+			specify( 'Promise of an Array of values and resolved Promises', ->
 				promise = Deft.Promise.reduce(
 					Deft.Deferred.resolve(
 						[ 1, Deft.Deferred.resolve( 2 ), Deft.Deferred.resolve( 3 ), 4 ]
@@ -2593,10 +2760,55 @@ describe( 'Deft.promise.Promise', ->
 			return
 		)
 		
-		# TODO: Empty Array with no initial value
-		# TODO: Promise of Empty Array with no initial value
-		# TODO: No reduce function specified
-		# TODO: Non-array specified
+		describe( 'returns a new Promise that will reject if reduce is attempted on an Empty Array with no initial value specified', ->
+			specify( 'Empty Array', ->
+				promise = Deft.Promise.reduce( [], sumFunction )
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.be.rejected.with( TypeError, 'Reduce of empty array with no initial value' )
+			)
+			
+			specify( 'Promise of an empty Array', ->
+				promise = Deft.Promise.reduce( Deft.Deferred.resolve( [] ), sumFunction )
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.be.rejected.with( TypeError, 'Reduce of empty array with no initial value' )
+			)
+			
+			return
+		)
+		
+		describe( 'throws an Error if anything other than an Array or Promise of an Array and a function are specified as the first two parameters', ->
+			specify( 'no parameters', ->
+				expect( -> Deft.Promise.reduce() ).to.throw( Error, 'Invalid parameter: expected an Array or Promise of an Array.' )
+			)
+			
+			specify( 'a single non-Array parameter', ->
+				expect( -> Deft.Promise.reduce( 1 ) ).to.throw( Error, 'Invalid parameter: expected an Array or Promise of an Array.' )
+			)
+			
+			specify( 'multiple non-Array parameters', ->
+				expect( -> Deft.Promise.reduce( 1, 2, 3 ) ).to.throw( Error, 'Invalid parameter: expected an Array or Promise of an Array.' )
+			)
+			
+			specify( 'an Array and no function', ->
+				expect( -> Deft.Promise.reduce( [ 1, 2, 3 ] ) ).to.throw( Error, 'Invalid parameter: expected a function.' )
+			)
+			
+			specify( 'a Promise of an Array and no function', ->
+				expect( -> Deft.Promise.reduce( Deft.Deferred.resolve( [ 1, 2, 3 ] ) ) ).to.throw( Error, 'Invalid parameter: expected a function.' )
+			)
+			
+			specify( 'an Array and a non-function parameter', ->
+				expect( -> Deft.Promise.reduce( [ 1, 2, 3 ], 'not a function' ) ).to.throw( Error, 'Invalid parameter: expected a function.' )
+			)
+			
+			specify( 'a Promise of a non-function parameter', ->
+				expect( -> Deft.Promise.reduce( Deft.Deferred.resolve( [ 1, 2, 3 ], 'not a function' ) ) ).to.throw( Error, 'Invalid parameter: expected a function.' )
+			)
+		)
+		
+		# TODO: Rejected Promise of an intial value
 		
 		return
 	)
