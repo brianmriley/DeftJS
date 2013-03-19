@@ -212,6 +212,12 @@ Ext.define('Deft.promise.Promise', {
     */
 
     map: function(promisesOrValues, mapFn) {
+      if (!(Ext.isArray(promisesOrValues) || Deft.Promise.isPromise(promisesOrValues))) {
+        throw new Error('Invalid parameter: expected an Array or Promise of an Array.');
+      }
+      if (!Ext.isFunction(mapFn)) {
+        throw new Error('Invalid parameter: expected a function.');
+      }
       return Deft.Promise.when(promisesOrValues).then(function(promisesOrValues) {
         var deferred, index, promiseOrValue, remainingToResolve, resolve, results, _i, _len;
         remainingToResolve = promisesOrValues.length;
@@ -250,6 +256,12 @@ Ext.define('Deft.promise.Promise', {
 
     reduce: function(promisesOrValues, reduceFn, initialValue) {
       var initialValueSpecified;
+      if (!(Ext.isArray(promisesOrValues) || Deft.Promise.isPromise(promisesOrValues))) {
+        throw new Error('Invalid parameter: expected an Array or Promise of an Array.');
+      }
+      if (!Ext.isFunction(reduceFn)) {
+        throw new Error('Invalid parameter: expected a function.');
+      }
       initialValueSpecified = arguments.length === 3;
       return Deft.Promise.when(promisesOrValues).then(function(promisesOrValues) {
         var reduceArguments;

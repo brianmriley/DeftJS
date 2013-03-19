@@ -196,6 +196,10 @@ Ext.define( 'Deft.promise.Promise',
 		* The specified map function may return either a value or a promise.
 		###
 		map: ( promisesOrValues, mapFn ) ->
+			if not ( Ext.isArray( promisesOrValues ) or Deft.Promise.isPromise( promisesOrValues ) )
+				throw new Error( 'Invalid parameter: expected an Array or Promise of an Array.' )
+			if not Ext.isFunction( mapFn )
+				throw new Error( 'Invalid parameter: expected a function.' )
 			return Deft.Promise.when( promisesOrValues ).then(
 				( promisesOrValues ) ->
 					remainingToResolve = promisesOrValues.length
@@ -235,6 +239,10 @@ Ext.define( 'Deft.promise.Promise',
 		* input to contain promises and/or values.
 		###
 		reduce: ( promisesOrValues, reduceFn, initialValue ) ->
+			if not ( Ext.isArray( promisesOrValues ) or Deft.Promise.isPromise( promisesOrValues ) )
+				throw new Error( 'Invalid parameter: expected an Array or Promise of an Array.' )
+			if not Ext.isFunction( reduceFn )
+				throw new Error( 'Invalid parameter: expected a function.' )
 			initialValueSpecified = arguments.length is 3
 			return Deft.Promise.when( promisesOrValues ).then( 
 				( promisesOrValues ) ->
