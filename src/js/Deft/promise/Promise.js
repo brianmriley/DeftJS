@@ -286,7 +286,7 @@ Ext.define('Deft.promise.Promise', {
             break;
           }
           if (++index >= length) {
-            throw new TypeError();
+            throw new TypeError('Reduce of empty array with no initial value');
           }
         }
       } else {

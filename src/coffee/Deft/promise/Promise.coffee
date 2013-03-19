@@ -243,7 +243,7 @@ Ext.define( 'Deft.promise.Promise',
 						( previousValueOrPromise, currentValueOrPromise, currentIndex ) ->
 							return Deft.Promise.when( previousValueOrPromise ).then( ( previousValue ) ->
 								return Deft.Promise.when( currentValueOrPromise ).then( ( currentValue ) ->
-										return reduceFn( previousValue, currentValue, currentIndex, promisesOrValues )
+									return reduceFn( previousValue, currentValue, currentIndex, promisesOrValues )
 								)
 							)
 					]
@@ -278,7 +278,7 @@ Ext.define( 'Deft.promise.Promise',
 						break
 					# If we reached the end of the array without finding any real elements, it's a TypeError
 					if ++index >= length
-						throw new TypeError()
+						throw new TypeError( 'Reduce of empty array with no initial value' )
 			else
 				# If initialValue provided, use it
 				reduced = args[ 1 ]
