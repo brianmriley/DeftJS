@@ -1304,9 +1304,23 @@ describe( 'Deft.promise.Promise', ->
 	)
 	
 	describe( 'map()', ->
-		doubleFunction = ( value ) -> value * 2
-		doublePromiseFunction = ( value ) -> Deft.Deferred.resolve( value * 2 )
-		rejectFunction = ( value ) -> Deft.Deferred.reject( new Error( 'error message' ) )
+		doubleFunction = ( value, index, array ) -> 
+			expect( arguments ).to.have.lengthOf( 3 )
+			expect( array ).to.be.instanceof( Array )
+			expect( index ).to.be.at.least( 0 ).and.lessThan( array.length )
+			value * 2
+		
+		doublePromiseFunction = ( value, index, array ) -> 
+			expect( arguments ).to.have.lengthOf( 3 )
+			expect( array ).to.be.instanceof( Array )
+			expect( index ).to.be.at.least( 0 ).and.lessThan( array.length )
+			Deft.Deferred.resolve( value * 2 )
+		
+		rejectFunction = ( value, index, array ) -> 
+			expect( arguments ).to.have.lengthOf( 3 )
+			expect( array ).to.be.instanceof( Array )
+			expect( index ).to.be.at.least( 0 ).and.lessThan( array.length )
+			Deft.Deferred.reject( new Error( 'error message' ) )
 		
 		describe( 'returns a new Promise that will resolve with an Array of the mapped values for the specified Array of Promise(s) or value(s)', ->
 			specify( 'Empty Array', ->
@@ -1807,7 +1821,6 @@ describe( 'Deft.promise.Promise', ->
 			return
 		)
 		
-		# TODO: Ensure value, index, array is passed to map function
 		# TODO: Error if non-Array specified
 		# TODO: Error if no map function specified
 		
@@ -1815,8 +1828,17 @@ describe( 'Deft.promise.Promise', ->
 	)
 	
 	describe( 'reduce()', ->
-		sumFunction = ( previousValue, currentValue, index, array ) -> previousValue + currentValue
-		rejectFunction = ( previousValue, currentValue, index, array ) -> Deft.Deferred.reject( new Error( 'error message' ) )
+		sumFunction = ( previousValue, currentValue, index, array ) ->
+			expect( arguments ).to.have.lengthOf( 4 )
+			expect( array ).to.be.instanceof( Array )
+			expect( index ).to.be.at.least( 0 ).and.lessThan( array.length )
+			previousValue + currentValue
+		
+		rejectFunction = ( previousValue, currentValue, index, array ) -> 
+			expect( arguments ).to.have.lengthOf( 4 )
+			expect( array ).to.be.instanceof( Array )
+			expect( index ).to.be.at.least( 0 ).and.lessThan( array.length )
+			Deft.Deferred.reject( new Error( 'error message' ) )
 		
 		describe( 'returns a Promise that will resolve with the value obtained by reducing the specified Array of Promise(s) or value(s) using the specified function and initial value', ->
 			specify( 'Empty Array and an initial value', ->
@@ -2303,7 +2325,6 @@ describe( 'Deft.promise.Promise', ->
 			return
 		)
 		
-		# TODO: Ensure previousValue, currentValue, index, array is passed to reduce function
 		# TODO: Reduce returns a Promise
 		# TODO: Empty Array with no initial value
 		# TODO: Promise of Empty Array with no initial value

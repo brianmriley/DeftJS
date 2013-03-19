@@ -931,13 +931,22 @@ describe('Deft.promise.Promise', function() {
   });
   describe('map()', function() {
     var doubleFunction, doublePromiseFunction, rejectFunction;
-    doubleFunction = function(value) {
+    doubleFunction = function(value, index, array) {
+      expect(arguments).to.have.lengthOf(3);
+      expect(array).to.be["instanceof"](Array);
+      expect(index).to.be.at.least(0).and.lessThan(array.length);
       return value * 2;
     };
-    doublePromiseFunction = function(value) {
+    doublePromiseFunction = function(value, index, array) {
+      expect(arguments).to.have.lengthOf(3);
+      expect(array).to.be["instanceof"](Array);
+      expect(index).to.be.at.least(0).and.lessThan(array.length);
       return Deft.Deferred.resolve(value * 2);
     };
-    rejectFunction = function(value) {
+    rejectFunction = function(value, index, array) {
+      expect(arguments).to.have.lengthOf(3);
+      expect(array).to.be["instanceof"](Array);
+      expect(index).to.be.at.least(0).and.lessThan(array.length);
       return Deft.Deferred.reject(new Error('error message'));
     };
     describe('returns a new Promise that will resolve with an Array of the mapped values for the specified Array of Promise(s) or value(s)', function() {
@@ -1256,9 +1265,15 @@ describe('Deft.promise.Promise', function() {
   return describe('reduce()', function() {
     var rejectFunction, sumFunction;
     sumFunction = function(previousValue, currentValue, index, array) {
+      expect(arguments).to.have.lengthOf(4);
+      expect(array).to.be["instanceof"](Array);
+      expect(index).to.be.at.least(0).and.lessThan(array.length);
       return previousValue + currentValue;
     };
     rejectFunction = function(previousValue, currentValue, index, array) {
+      expect(arguments).to.have.lengthOf(4);
+      expect(array).to.be["instanceof"](Array);
+      expect(index).to.be.at.least(0).and.lessThan(array.length);
       return Deft.Deferred.reject(new Error('error message'));
     };
     describe('returns a Promise that will resolve with the value obtained by reducing the specified Array of Promise(s) or value(s) using the specified function and initial value', function() {
