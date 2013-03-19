@@ -1807,6 +1807,7 @@ describe( 'Deft.promise.Promise', ->
 			return
 		)
 		
+		# TODO: Ensure value, index, array is passed to map function
 		# TODO: Error if non-Array specified
 		# TODO: Error if no map function specified
 		
@@ -1815,6 +1816,7 @@ describe( 'Deft.promise.Promise', ->
 	
 	describe( 'reduce()', ->
 		sumFunction = ( previousValue, currentValue, index, array ) -> previousValue + currentValue
+		rejectFunction = ( previousValue, currentValue, index, array ) -> Deft.Deferred.reject( new Error( 'error message' ) )
 		
 		describe( 'returns a Promise that will resolve with the value obtained by reducing the specified Array of Promise(s) or value(s) using the specified function and initial value', ->
 			specify( 'Empty Array and an initial value', ->
@@ -2173,8 +2175,136 @@ describe( 'Deft.promise.Promise', ->
 			return
 		)
 		
+		describe( 'returns a new Promise that will reject with the error associated with the first rejected Promise returned by the specified function for the the specified Array of Promise(s) or value(s)', ->
+			specify( 'Array with one value', ->
+				promise = Deft.Promise.reduce( [ 1 ], rejectFunction, 10 )
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.be.rejected.with( Error, 'error message' )
+			)
+			
+			specify( 'Array of values', ->
+				promise = Deft.Promise.reduce( [ 1, 2, 3 ], rejectFunction, 10 )
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.be.rejected.with( Error, 'error message' )
+			)
+			
+			specify( 'Sparse Array', ->
+				promise = Deft.Promise.reduce(`[,2,,4,5]`, rejectFunction, 10 )
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.be.rejected.with( Error, 'error message' )
+			)
+			
+			specify( 'Array with one resolved Promise', ->
+				promise = Deft.Promise.reduce( [ Deft.Deferred.resolve( 1 ) ], rejectFunction, 10 )
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.be.rejected.with( Error, 'error message' )
+			)
+			
+			specify( 'Array of resolved Promises', ->
+				promise = Deft.Promise.reduce( [ Deft.Deferred.resolve( 1 ), Deft.Deferred.resolve( 2 ), Deft.Deferred.resolve( 3 ) ], rejectFunction, 10 )
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.be.rejected.with( Error, 'error message' )
+			)
+			
+			specify( 'Array of values and resolved Promises', ->
+				promise = Deft.Promise.reduce( [ 1, Deft.Deferred.resolve( 2 ), Deft.Deferred.resolve( 3 ), 4 ], rejectFunction, 10 )
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.be.rejected.with( Error, 'error message' )
+			)
+			
+			return
+		)
+		
+		describe( 'returns a new Promise that will reject with the error associated with the first rejected Promise returned by the specified function for the the specified resolved Promise of an Array of Promise(s) or value(s)', ->
+			specify( 'Array with one value', ->
+				promise = Deft.Promise.reduce(
+					Deft.Deferred.resolve(
+						[ 1 ]
+					)
+					rejectFunction
+					10
+				)
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.be.rejected.with( Error, 'error message' )
+			)
+			
+			specify( 'Array of values', ->
+				promise = Deft.Promise.reduce(
+					Deft.Deferred.resolve(
+						[ 1, 2, 3 ]
+					)
+					rejectFunction
+					10
+				)
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.be.rejected.with( Error, 'error message' )
+			)
+			
+			specify( 'Sparse Array', ->
+				promise = Deft.Promise.reduce(
+					Deft.Deferred.resolve(
+						`[,2,,4,5]`
+					)
+					rejectFunction
+					10
+				)
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.be.rejected.with( Error, 'error message' )
+			)
+			
+			specify( 'Array with one resolved Promise', ->
+				promise = Deft.Promise.reduce(
+					Deft.Deferred.resolve(
+						[ Deft.Deferred.resolve( 1 ) ]
+					)
+					rejectFunction
+					10
+				)
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.be.rejected.with( Error, 'error message' )
+			)
+			
+			specify( 'Array of resolved Promises', ->
+				promise = Deft.Promise.reduce(
+					Deft.Deferred.resolve(
+						[ Deft.Deferred.resolve( 1 ), Deft.Deferred.resolve( 2 ), Deft.Deferred.resolve( 3 ) ]
+					)
+					rejectFunction
+					10
+				)
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.be.rejected.with( Error, 'error message' )
+			)
+			
+			specify( 'Array of values and resolved Promises', ->
+				promise = Deft.Promise.reduce(
+					Deft.Deferred.resolve(
+						[ 1, Deft.Deferred.resolve( 2 ), Deft.Deferred.resolve( 3 ), 4 ]
+					)
+					rejectFunction
+					10
+				)
+				
+				promise.should.be.an.instanceof( Deft.Promise )
+				return promise.should.be.rejected.with( Error, 'error message' )
+			)
+			
+			return
+		)
+		
+		# TODO: Ensure previousValue, currentValue, index, array is passed to reduce function
 		# TODO: Reduce returns a Promise
-		# TODO: Reduce returns a rejected Promise
 		# TODO: Empty Array with no initial value
 		# TODO: Promise of Empty Array with no initial value
 		# TODO: No reduce function specified
